@@ -1,0 +1,17 @@
+prooph_event_store:
+    stores:
+        todo_store:
+            event_store: '@prooph_event_store.mysql_event_store.tasker_store'
+
+
+services:
+    prooph_event_store.mysql_event_store.tasker_store:
+        class: Prooph\EventStore\Pdo\MySqlEventStore
+        arguments: ['@prooph_event_store.message_factory', '@doctrine.pdo.connection', '@prooph_event_store.single_stream_strategy']
+
+    doctrine.pdo.connection:
+        class: PDO
+        factory: ['@database_connection', getWrappedConnection]
+
+    prooph_event_store.single_stream_strategy:
+        class: Prooph\EventStore\Pdo\PersistenceStrategy\MySqlSingleStreamStrategy

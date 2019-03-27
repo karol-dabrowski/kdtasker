@@ -1,4 +1,5 @@
-command:
+create_task:
   path: /api/command
   controller: App\Controller\ApiController::postAction
+  defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
   methods: POST

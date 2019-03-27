@@ -24,7 +24,6 @@ final class ApiController
 	 */
 	private $messageFactory;
 
-	private const TASK_COMMAND_NAMESPACE = 'Tasker\\Model\\Task\\Command\\';
 	private const NAME_ATTRIBUTE = 'command';
 
 	/**
@@ -45,7 +44,7 @@ final class ApiController
 	public function postAction(Request $request)
 	{
 		$data = json_decode($request->getContent(), true);
-		$commandName = self::TASK_COMMAND_NAMESPACE . $data[self::NAME_ATTRIBUTE];
+		$commandName = $request->attributes->get(self::NAME_ATTRIBUTE);
 		$payload = ['payload' => $data['payload']];
 
 		$command = $this->messageFactory->createMessageFromArray($commandName, $payload);

@@ -2,6 +2,11 @@ prooph_event_store:
     stores:
         todo_store:
             event_store: '@prooph_event_store.mysql_event_store.tasker_store'
+            repositories:
+                task_repository:
+                    repository_class: Tasker\Infrastructure\Repository\TaskEventStore
+                    aggregate_type: Tasker\Model\Task\Domain\Task
+                    aggregate_translator: prooph_event_sourcing.aggregate_translator
 
 
 services:
@@ -15,3 +20,6 @@ services:
 
     prooph_event_store.single_stream_strategy:
         class: Prooph\EventStore\Pdo\PersistenceStrategy\MySqlSingleStreamStrategy
+
+    prooph_event_sourcing.aggregate_translator:
+        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator

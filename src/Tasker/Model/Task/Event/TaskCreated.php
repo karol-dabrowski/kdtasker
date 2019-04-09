@@ -7,10 +7,10 @@ use Prooph\EventSourcing\AggregateChanged;
 use Tasker\Model\Task\Domain\TaskId;
 
 /**
- * Class TaskWasCreated
+ * Class TaskCreated
  * @package Tasker\Model\Task\Event
  */
-final class TaskWasCreated extends AggregateChanged
+final class TaskCreated extends AggregateChanged
 {
 	/**
 	 * @var TaskId
@@ -25,9 +25,10 @@ final class TaskWasCreated extends AggregateChanged
 	/**
 	 * @param TaskId $taskId
 	 * @param string $title
-	 * @return TaskWasCreated
+	 *
+	 * @return TaskCreated
 	 */
-	public static function create(TaskId $taskId, string $title): TaskWasCreated
+	public static function create(TaskId $taskId, string $title ): TaskCreated
 	{
 		$event = self::occur(
 			$taskId->toString(),

@@ -5,7 +5,7 @@ namespace Tasker\Model\Task\Domain;
 
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
-use Tasker\Model\Task\Event\TaskWasCreated;
+use Tasker\Model\Task\Event\TaskCreated;
 
 /**
  * Class Task
@@ -31,7 +31,7 @@ class Task extends AggregateRoot
 	public static function create(TaskId $taskId, string $title): Task
 	{
 		$self = new self();
-		$self->recordThat(TaskWasCreated::create($taskId, $title));
+		$self->recordThat(TaskCreated::create($taskId, $title));
 
 		return $self;
 	}
@@ -66,16 +66,16 @@ class Task extends AggregateRoot
 	protected function apply(AggregateChanged $event): void
 	{
 		switch(get_class($event)) {
-			case TaskWasCreated::class:
-				$this->whenTaskWasCreated($event);
+			case TaskCreated::class:
+				$this->whenTaskCreated($event);
 				break;
 		}
 	}
 
 	/**
-	 * @param TaskWasCreated $event
+	 * @param TaskCreated $event
 	 */
-	protected function whenTaskWasCreated(TaskWasCreated $event): void
+	protected function whenTaskCreated(TaskCreated $event): void
 	{
 		$this->taskId = $event->taskId();
 		$this->title = $event->title();

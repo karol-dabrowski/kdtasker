@@ -20,6 +20,10 @@ services:
         arguments: ['@prooph_service_bus.tasker_command_bus', '@prooph_service_bus.message_factory']
         tags: ['controller.service_arguments']
 
+    App\Controller\AuthController:
+        arguments: ['@prooph_service_bus.user_command_bus', '@prooph_service_bus.message_factory']
+        tags: ['controller.service_arguments']
+
     # Console commands
 
     App\Command\CreateEventStreamCommand:

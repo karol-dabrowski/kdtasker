@@ -3,3 +3,7 @@ prooph_service_bus:
         tasker_command_bus:
             router:
                 type: 'prooph_service_bus.command_bus_router'
+
+        user_command_bus:
+            router:
+                type: 'prooph_service_bus.command_bus_router'

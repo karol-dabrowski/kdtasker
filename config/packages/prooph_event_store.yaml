@@ -1,6 +1,6 @@
 prooph_event_store:
     stores:
-        todo_store:
+        tasker_store:
             event_store: '@prooph_event_store.mysql_event_store.tasker_store'
             repositories:
                 task_repository:

@@ -29,9 +29,15 @@ services:
     App\Command\CreateEventStreamCommand:
         arguments: ['@prooph_event_store.mysql_event_store.tasker_store']
 
-    # Command handlers
+    # Command handlers - task context
 
     Tasker\Model\Task\CommandHandler\CreateTaskHandler:
         arguments: ['@task_repository']
         tags:
             - { name: 'prooph_service_bus.tasker_command_bus.route_target', message_detection: true }
+
+    # Command handlers - user context
+
+    Tasker\Model\User\CommandHandler\RegisterUserHandler:
+        tags:
+            - { name: 'prooph_service_bus.user_command_bus.route_target', message_detection: true }

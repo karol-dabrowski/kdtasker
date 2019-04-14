@@ -25,6 +25,16 @@ class User
 	private $username;
 
 	/**
+	 * @var \DateTimeImmutable|null
+	 */
+	private $created;
+
+	/**
+	 * @var \DateTime|null
+	 */
+	private $modified;
+
+	/**
 	 * @var string
 	 */
 	private $password;
@@ -63,5 +73,27 @@ class User
 		$this->username = $username;
 		$this->password = $password;
 		$this->confirmed = $confirmed;
+		$this->created = null;
+		$this->modified = null;
+	}
+
+	/**
+	 * @param \DateTimeImmutable $dateTime
+	 */
+	public function setCreatedDateTime(\DateTimeImmutable $dateTime): void
+	{
+		if($this->created !== null) {
+			throw new \LogicException('creation_date_cannot_be_changed');
+		}
+
+		$this->created = $dateTime;
+	}
+
+	/**
+	 * @param \DateTime $dateTime
+	 */
+	public function setModifiedDateTime(\DateTime $dateTime): void
+	{
+		$this->modified = $dateTime;
 	}
 }

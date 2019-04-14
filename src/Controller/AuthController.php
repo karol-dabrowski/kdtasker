@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 namespace App\Controller;
 
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\ServiceBus\CommandBus;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,6 +37,7 @@ final class AuthController
 
 	/**
 	 * @param Request $request
+	 * @return JsonResponse
 	 */
 	public function register(Request $request)
 	{
@@ -44,5 +47,7 @@ final class AuthController
 		$commandName = 'Tasker\Model\User\Command\RegisterUser';
 		$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
 		$this->commandBus->dispatch($command);
+
+		return new JsonResponse();
 	}
 }

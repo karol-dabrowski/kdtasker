@@ -1,0 +1,17 @@
+Tasker\Model\User\Domain\UserName:
+    type: embeddable
+    fields:
+        firstName:
+            type: string
+            nullable: false
+            length: 80
+            options:
+                fixed: false
+            column: first_name
+        lastName:
+            type: string
+            nullable: false
+            length: 120
+            options:
+                fixed: false
+            column: last_name

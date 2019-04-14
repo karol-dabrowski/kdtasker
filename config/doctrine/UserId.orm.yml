@@ -1,0 +1,9 @@
+Tasker\Model\User\Domain\UserId:
+    type: embeddable
+    id:
+        uuid:
+            type: guid
+            nullable: false
+            length: 36
+            id: true
+            column: id

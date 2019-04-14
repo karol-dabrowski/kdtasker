@@ -1,0 +1,31 @@
+Tasker\Model\User\Domain\User:
+    type: entity
+    table: users
+    embedded:
+        id:
+            class: Tasker\Model\User\Domain\UserId
+            columnPrefix: false
+        email:
+            class: Tasker\Model\User\Domain\UserEmail
+            columnPrefix: false
+        username:
+            class: Tasker\Model\User\Domain\UserName
+            columnPrefix: false
+    fields:
+        password:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        confirmed:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+        created:
+            type: datetime_immutable
+            nullable: true
+        modified:
+            type: datetime
+            nullable: true

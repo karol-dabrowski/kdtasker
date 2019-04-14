@@ -7,6 +7,10 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Tasker\Model\Task\Domain\TaskId;
 
+/**
+ * Trait IdTrait
+ * @package Tasker\Model
+ */
 trait IdTrait
 {
 	/**

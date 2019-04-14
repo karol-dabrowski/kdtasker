@@ -10,10 +10,6 @@ services:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Tasker,Kernel.php}'
 
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
-
     # Controllers
 
     App\Controller\ApiController:
@@ -39,18 +35,12 @@ services:
     # Command handlers - user context
 
     Tasker\Model\User\CommandHandler\RegisterUserHandler:
-        arguments: ['@doctrine.repository.user_repository']
+        arguments: ['@App\Repository\UserRepository']
         tags:
             - { name: 'prooph_service_bus.user_command_bus.route_target', message_detection: true }
 
-    # Doctrine repositories
-
-    doctrine.repository.user_repository:
-        class: 'App\Repository\UserRepository'
-
     # Doctrine user subscribers
 
-    doctrine.event_subscriber.user_registered_subscriber:
-        class: 'App\EventSubscriber\UserRegisteredSubscriber'
+    App\EventSubscriber\UserRegisteredSubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }

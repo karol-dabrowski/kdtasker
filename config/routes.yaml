@@ -1,14 +1,14 @@
 # Auth routes
 
 register:
-  path: /auth/register
-  controller: App\Controller\AuthController::register
-  methods: POST
+    path: /auth/register
+    controller: App\Controller\AuthController::register
+    methods: POST
 
 # Tasker routes
 
 create_task:
-  path: /api/command
-  controller: App\Controller\ApiController::postAction
-  defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
-  methods: POST
+    path: /api/command
+    controller: App\Controller\ApiController::postAction
+    defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
+    methods: POST

@@ -96,4 +96,20 @@ class User
 	{
 		$this->modified = $dateTime;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getPassword(): string
+	{
+		return $this->password;
+	}
+
+	/**
+	 * @param string $newPassword
+	 */
+	public function setPassword(string $newPassword): void
+	{
+		$this->password = $newPassword;
+	}
 }

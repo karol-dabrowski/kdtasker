@@ -120,4 +120,12 @@ class User
 	{
 		return $this->email;
 	}
+
+	/**
+	 * @return UserId
+	 */
+	public function getUserId(): UserId
+	{
+		return $this->id;
+	}
 }

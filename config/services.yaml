@@ -49,3 +49,15 @@ services:
 
     App\Security\UserProvider:
         arguments: ['@App\Repository\UserRepository']
+
+    # Event listeners
+
+    App\Security\EventListener\JWTCreatedListener:
+        arguments: ['@request_stack']
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    App\Security\EventListener\AuthenticationSuccessListener:
+        arguments: ['@request_stack']
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }

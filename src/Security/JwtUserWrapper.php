@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Tasker\Model\User\Domain\User;
+use Tasker\Model\User\Domain\UserId;
 
 /**
  * Class JwtUserWrapper
  * @package App\Security
  */
-final class JwtUserWrapper implements UserInterface
+final class JwtUserWrapper implements JWTUserInterface
 {
 	/**
 	 * @var User
@@ -70,5 +70,13 @@ final class JwtUserWrapper implements UserInterface
 	public function getUsername(): string
 	{
 		return $this->user->getEmail()->toString();
+	}
+
+	/**
+	 * @return UserId
+	 */
+	public function getUserId(): UserId
+	{
+		return $this->user->getUserId();
 	}
 }

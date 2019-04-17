@@ -2,7 +2,7 @@ Tasker\Model\User\Domain\UserId:
     type: embeddable
     id:
         uuid:
-            type: guid
+            type: uuid
             nullable: false
             length: 36
             id: true

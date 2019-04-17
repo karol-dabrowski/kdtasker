@@ -19,4 +19,10 @@ interface UserRepository
 	 * @return User|null
 	 */
 	public function get(UserId $userId): ?User;
+
+	/**
+	 * @param UserEmail $email
+	 * @return User|null
+	 */
+	public function getByEmail(UserEmail $email): ?User;
 }

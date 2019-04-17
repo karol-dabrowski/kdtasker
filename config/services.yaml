@@ -44,3 +44,8 @@ services:
     App\EventSubscriber\UserRegisteredSubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    # Providers
+
+    App\Security\UserProvider:
+        arguments: ['@App\Repository\UserRepository']

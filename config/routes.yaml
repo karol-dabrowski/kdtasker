@@ -1,5 +1,8 @@
 # Auth routes
 
+login:
+    path: /auth/login
+
 register:
     path: /auth/register
     controller: App\Controller\AuthController::register
@@ -8,7 +11,7 @@ register:
 # Tasker routes
 
 create_task:
-    path: /api/command
+    path: /api/create_task
     controller: App\Controller\ApiController::postAction
     defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
     methods: POST

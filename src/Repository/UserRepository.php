@@ -6,6 +6,7 @@ namespace App\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Tasker\Model\User\Domain\User;
+use Tasker\Model\User\Domain\UserEmail;
 use Tasker\Model\User\Domain\UserId;
 use Tasker\Model\User\Domain\UserRepository as UserRepositoryInterface;
 
@@ -41,7 +42,15 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 	 */
 	public function get(UserId $userId): ?User
 	{
-		//TODO implement
-		return null;
+		return $this->find($userId);
+	}
+
+	/**
+	 * @param UserEmail $email
+	 * @return User|null
+	 */
+	public function getByEmail(UserEmail $email): ?User
+	{
+		return $this->findOneBy(['email.email' => $email->toString()]);
 	}
 }

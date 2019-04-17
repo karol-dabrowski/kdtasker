@@ -112,4 +112,12 @@ class User
 	{
 		$this->password = $newPassword;
 	}
+
+	/**
+	 * @return UserEmail
+	 */
+	public function getEmail(): UserEmail
+	{
+		return $this->email;
+	}
 }

@@ -2,6 +2,12 @@
 
 login:
     path: /auth/login
+    methods: POST
+
+refresh_token:
+    path: /auth/token/refresh
+    controller: gesdinet.jwtrefreshtoken::refresh
+    methods: POST
 
 register:
     path: /auth/register
@@ -11,7 +17,7 @@ register:
 # Tasker routes
 
 create_task:
-    path: /api/create_task
+    path: /api/task/create
     controller: App\Controller\ApiController::postAction
     defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
     methods: POST

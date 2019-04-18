@@ -19,12 +19,19 @@ class AuthenticationSuccessListener
 	private $requestStack;
 
 	/**
+	 * @var int
+	 */
+	private $tokenTtl;
+
+	/**
 	 * AuthenticationSuccessListener constructor.
 	 * @param RequestStack $requestStack
+	 * @param int $tokenTtl
 	 */
-	public function __construct(RequestStack $requestStack)
+	public function __construct(RequestStack $requestStack, int $tokenTtl)
 	{
 		$this->requestStack = $requestStack;
+		$this->tokenTtl = $tokenTtl;
 	}
 
 	/**
@@ -37,11 +44,10 @@ class AuthenticationSuccessListener
 			throw new \InvalidArgumentException('internal_authorization_error');
 		}
 
+		$expirationTime = $this->tokenTtl + time();
 		$data = $event->getData();
-		$data['data'] = array(
-			'user_id' => $user->getUserId()->toString()
-		);
-
+		$data['user_id'] = $user->getUserId()->toString();
+		$data['token_expiration_time'] = $expirationTime;
 		$event->setData($data);
 	}
 }

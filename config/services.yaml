@@ -58,6 +58,6 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 
     App\Security\EventListener\AuthenticationSuccessListener:
-        arguments: ['@request_stack']
+        arguments: ['@request_stack', '%lexik_jwt_authentication.token_ttl%']
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }

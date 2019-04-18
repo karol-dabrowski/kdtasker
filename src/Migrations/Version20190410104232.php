@@ -21,7 +21,7 @@ final class Version20190410104232 extends AbstractMigration
     {
 		$table = $schema->createTable(Table::USERS);
 
-		$table->addColumn('id', 'string', ['length' => 36]);
+		$table->addColumn('id', 'uuid');
 	    $table->addColumn('email', 'string', ['length' => 100]);
 	    $table->addColumn('password', 'string');
 	    $table->addColumn('first_name', 'string', ['length' => 80]);

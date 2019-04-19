@@ -1,12 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Unit\Task;
 
 use Tasker\Model\Task\Domain\Task;
 use Tasker\Model\Task\Domain\TaskId;
 use Tasker\Model\Task\Event\TaskCreated;
 
+/**
+ * Class TaskTest
+ * @package App\Tests
+ */
 class TaskTest extends \Codeception\Test\Unit
 {
     /**
@@ -38,12 +42,13 @@ class TaskTest extends \Codeception\Test\Unit
 		$task = Task::create($this->taskId, $this->taskTitle);
 	    $this->assertSame($this->taskId, $task->taskId());
 	    $this->assertSame($this->taskTitle, $task->title());
+	    $this->assertInstanceOf(Task::class, $task);
 
 		$events = $this->tester->popRecordedEvents($task);
 		$this->assertCount(1, $events);
 
 		$event = $events[0];
-		$this->assertSame(TaskCreated::class, $event->messageName());
+		$this->assertInstanceOf(TaskCreated::class, $event);
 	    $this->assertSame($this->taskId, $event->taskId());
 	    $this->assertSame($this->taskTitle, $event->title());
     }

@@ -34,7 +34,7 @@ class UserName
 			FILTER_VALIDATE_REGEXP,
 			['options' => ['regexp' => $firstNameRegexp]])
 		) {
-			throw new \InvalidArgumentException('invalid_first_name');
+			throw new \InvalidArgumentException('first_name|can_contain_only_letters');
 		}
 
 		if(!filter_var(
@@ -42,7 +42,7 @@ class UserName
 			FILTER_VALIDATE_REGEXP,
 			['options' => ['regexp' => $lastNameRegexp]])
 		) {
-			throw new \InvalidArgumentException('invalid_last_name');
+			throw new \InvalidArgumentException('last_name|can_contain_only_letters_and_dash');
 		}
 
 		return new self($firstName, $lastName);

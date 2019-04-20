@@ -21,7 +21,7 @@ class UserEmail
 	public static function fromString(string $email): UserEmail
 	{
 		if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			throw new \InvalidArgumentException('invalid_email');
+			throw new \InvalidArgumentException('email|must_be_correct_email');
 		}
 
 		return new self($email);

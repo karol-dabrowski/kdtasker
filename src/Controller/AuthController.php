@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Util\Response\ErrorResponseFactory;
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,10 +44,14 @@ final class AuthController
 	{
 		$data = json_decode($request->getContent(), true);
 		$payload = ['payload' => $data['payload']];
-
 		$commandName = 'Tasker\Model\User\Command\RegisterUser';
-		$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
-		$this->commandBus->dispatch($command);
+
+		try {
+			$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
+			$this->commandBus->dispatch($command);
+		} catch (\Exception $exception) {
+			return ErrorResponseFactory::createResponse($exception);
+		}
 
 		return new JsonResponse();
 	}

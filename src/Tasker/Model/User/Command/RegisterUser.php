@@ -56,16 +56,22 @@ class RegisterUser extends Command implements PayloadConstructable
 	 */
 	protected function setPayload(array $payload): void
 	{
-		Assertion::keyExists($payload, 'user_id');
-		Assertion::uuid($payload['user_id']);
-		Assertion::keyExists($payload, 'email');
-		Assertion::email($payload['email']);
-		Assertion::keyExists($payload, 'first_name');
-		Assertion::string($payload['first_name']);
-		Assertion::keyExists($payload, 'last_name');
-		Assertion::string($payload['last_name']);
-		Assertion::keyExists($payload, 'password');
-		Assertion::string($payload['password']);
+		Assertion::keyExists($payload, 'user_id', 'user_id|is_required');
+		Assertion::uuid($payload['user_id'], 'user_id|must_be_correct_uuid');
+		Assertion::keyExists($payload, 'email', 'email|is_required');
+		Assertion::email($payload['email'], 'email|must_be_correct_email');
+		Assertion::keyExists($payload, 'first_name', 'first_name|is_required');
+		Assertion::string($payload['first_name'], 'first_name|must_be_a_string');
+		Assertion::minLength($payload['first_name'], 3, 'first_name|must_be_between_3_and_80_characters');
+		Assertion::maxLength($payload['first_name'], 80, 'first_name|must_be_between_3_and_80_characters');
+		Assertion::keyExists($payload, 'last_name', 'last_name|is_required');
+		Assertion::string($payload['last_name'], 'last_name|must_be_a_string');
+		Assertion::minLength($payload['last_name'], 3, 'last_name|must_be_between_3_and_120_characters');
+		Assertion::maxLength($payload['last_name'], 120, 'last_name|must_be_between_3_and_120_characters');
+		Assertion::keyExists($payload, 'password', 'password|is_required');
+		Assertion::string($payload['password'], 'password|must_be_a_string');
+		Assertion::minLength($payload['password'], 8, 'password|must_be_between_8_and_30_characters');
+		Assertion::maxLength($payload['password'], 30, 'password|must_be_between_8_and_30_characters');
 		$this->payload = $payload;
 	}
 }

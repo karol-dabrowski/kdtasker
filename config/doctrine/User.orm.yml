@@ -11,13 +11,10 @@ Tasker\Model\User\Domain\User:
         username:
             class: Tasker\Model\User\Domain\UserName
             columnPrefix: false
-    fields:
         password:
-            type: string
-            nullable: false
-            length: 255
-            options:
-                fixed: false
+            class: Tasker\Model\User\Domain\UserPassword
+            columnPrefix: false
+    fields:
         confirmed:
             type: boolean
             nullable: false

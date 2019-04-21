@@ -10,6 +10,7 @@ use Tasker\Model\User\Domain\UserEmail;
 use Tasker\Model\User\Domain\UserId;
 use Assert\Assertion;
 use Tasker\Model\User\Domain\UserName;
+use Tasker\Model\User\Domain\UserPassword;
 
 /**
  * Class RegisterUser
@@ -44,11 +45,11 @@ class RegisterUser extends Command implements PayloadConstructable
 	}
 
 	/**
-	 * @return string
+	 * @return UserPassword
 	 */
-	public function password(): string
+	public function password(): UserPassword
 	{
-		return $this->payload['password'];
+		return UserPassword::fromString($this->payload['password']);
 	}
 
 	/**

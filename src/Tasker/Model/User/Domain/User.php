@@ -35,7 +35,7 @@ class User
 	private $modified;
 
 	/**
-	 * @var string
+	 * @var UserPassword
 	 */
 	private $password;
 
@@ -48,10 +48,10 @@ class User
 	 * @param UserId $userId
 	 * @param UserEmail $userEmail
 	 * @param UserName $userName
-	 * @param string $password
+	 * @param UserPassword $password
 	 * @return User
 	 */
-	public static function create(UserId $userId, UserEmail $userEmail, UserName $userName, string $password): User
+	public static function create(UserId $userId, UserEmail $userEmail, UserName $userName, UserPassword $password): User
 	{
 		$self = new self($userId, $userEmail, $userName, $password, false);
 
@@ -63,10 +63,10 @@ class User
 	 * @param UserId $id
 	 * @param UserEmail $email
 	 * @param UserName $username
-	 * @param string $password
+	 * @param UserPassword $password
 	 * @param bool $confirmed
 	 */
-	private function __construct(UserId $id, UserEmail $email, UserName $username, string $password, bool $confirmed)
+	private function __construct(UserId $id, UserEmail $email, UserName $username, UserPassword $password, bool $confirmed)
 	{
 		$this->id = $id;
 		$this->email = $email;
@@ -98,19 +98,11 @@ class User
 	}
 
 	/**
-	 * @return string
+	 * @return UserPassword
 	 */
-	public function getPassword(): string
+	public function getPassword(): UserPassword
 	{
 		return $this->password;
-	}
-
-	/**
-	 * @param string $newPassword
-	 */
-	public function setPassword(string $newPassword): void
-	{
-		$this->password = $newPassword;
 	}
 
 	/**

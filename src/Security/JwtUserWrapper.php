@@ -61,7 +61,7 @@ final class JwtUserWrapper implements JWTUserInterface
 	 */
 	public function getPassword()
 	{
-		return $this->user->getPassword();
+		return $this->user->getPassword()->toString();
 	}
 
 	/**

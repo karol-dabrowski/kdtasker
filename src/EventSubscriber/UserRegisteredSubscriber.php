@@ -56,8 +56,5 @@ final class UserRegisteredSubscriber implements EventSubscriber
 
 		$modifiedDateTime = new \DateTime();
 		$entity->setModifiedDateTime($modifiedDateTime);
-
-		$encodedPassword = password_hash($entity->getPassword(), PASSWORD_DEFAULT);
-		$entity->setPassword($encodedPassword);
 	}
 }

@@ -120,6 +120,9 @@
     "facebook/webdriver": {
         "version": "1.2.0"
     },
+    "fzaninotto/faker": {
+        "version": "v1.8.0"
+    },
     "gesdinet/jwt-refresh-token-bundle": {
         "version": "v0.6.2"
     },

@@ -100,7 +100,7 @@ class User
 	/**
 	 * @return UserPassword
 	 */
-	public function getPassword(): UserPassword
+	public function password(): UserPassword
 	{
 		return $this->password;
 	}
@@ -108,7 +108,7 @@ class User
 	/**
 	 * @return UserEmail
 	 */
-	public function getEmail(): UserEmail
+	public function email(): UserEmail
 	{
 		return $this->email;
 	}
@@ -116,7 +116,7 @@ class User
 	/**
 	 * @return UserId
 	 */
-	public function getUserId(): UserId
+	public function id(): UserId
 	{
 		return $this->id;
 	}

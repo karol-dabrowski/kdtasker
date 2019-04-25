@@ -61,7 +61,7 @@ final class JwtUserWrapper implements JWTUserInterface
 	 */
 	public function getPassword()
 	{
-		return $this->user->getPassword()->toString();
+		return $this->user->password()->toString();
 	}
 
 	/**
@@ -69,7 +69,7 @@ final class JwtUserWrapper implements JWTUserInterface
 	 */
 	public function getUsername(): string
 	{
-		return $this->user->getEmail()->toString();
+		return $this->user->email()->toString();
 	}
 
 	/**
@@ -77,6 +77,6 @@ final class JwtUserWrapper implements JWTUserInterface
 	 */
 	public function getUserId(): UserId
 	{
-		return $this->user->getUserId();
+		return $this->user->id();
 	}
 }

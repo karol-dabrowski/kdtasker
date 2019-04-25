@@ -26,7 +26,7 @@ final class AuthController
 	private $messageFactory;
 
 	/**
-	 * ApiController constructor.
+	 * AuthController constructor.
 	 * @param CommandBus $commandBus
 	 * @param MessageFactory $messageFactory
 	 */

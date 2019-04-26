@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Api\User;
 
 use App\Tests\ApiTester;
+use App\Tests\Fixture\UserFixture;
 use Faker\Factory;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,6 +81,43 @@ class RegisterCest
 		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
 		$I->seeResponseContainsJson(
 			$this->createErrorJsonResponse('validation_error', 'email', 'must_be_correct_email')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithoutEmail(ApiTester $I)
+	{
+		unset($this->userData['payload']['email']);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'email', 'is_required')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 * @throws \Exception
+	 */
+	public function registerWithAlreadyUsedEmail(ApiTester $I)
+	{
+		UserFixture::load(
+			$I,
+			$this->userData['payload']['user_id'],
+			$this->userData['payload']['email'],
+			$this->userData['payload']['password'],
+			$this->userData['payload']['first_name'],
+			$this->userData['payload']['last_name']
+		);
+
+		$this->userData['payload']['user_id'] = Uuid::uuid4()->toString();
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'email', 'this_email_is_already_used')
 		);
 	}
 

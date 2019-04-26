@@ -45,6 +45,10 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
+    App\EventSubscriber\UserRegisteredUniquenessValidatorSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     # Providers
 
     App\Security\UserProvider:

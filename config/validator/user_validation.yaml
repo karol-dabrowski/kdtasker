@@ -1,0 +1,8 @@
+Tasker\Model\User\Domain\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: id.uuid
+            message: 'id|this_id_is_already_used'
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: email.email
+            message: 'email|this_email_is_already_used'

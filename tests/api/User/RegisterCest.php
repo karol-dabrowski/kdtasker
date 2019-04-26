@@ -68,4 +68,35 @@ class RegisterCest
 			]
 		);
 	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithIncorrectEmail(ApiTester $I)
+	{
+		$this->userData['payload']['email'] = 'IncorrectEmailAddress';
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'email', 'must_be_correct_email')
+		);
+	}
+
+	/**
+	 * @param string $type
+	 * @param string $property
+	 * @param string $message
+	 * @return array
+	 */
+	private function createErrorJsonResponse(string $type, string $property, string $message): array
+	{
+		return [
+			'error' => [
+				'type' => $type,
+				'property' => $property,
+				'message' => $message
+			]
+		];
+	}
 }

@@ -245,6 +245,78 @@ class RegisterCest
 	}
 
 	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithoutLastName(ApiTester $I)
+	{
+		unset($this->userData['payload']['last_name']);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'last_name', 'is_required')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithNonStringLastName(ApiTester $I)
+	{
+		$this->userData['payload']['last_name'] = rand(100, 999999);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'last_name', 'must_be_a_string')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithTooShortLastName(ApiTester $I)
+	{
+		$this->userData['payload']['last_name'] = substr($this->userData['payload']['last_name'], 0, 1);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'last_name', 'must_be_between_3_and_120_characters')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithTooLongLastName(ApiTester $I)
+	{
+		$lastNameLength = strlen($this->userData['payload']['last_name']);
+		$multiplier = ceil(120 / $lastNameLength) + 1;
+		$this->userData['payload']['last_name'] = str_repeat($this->userData['payload']['last_name'], intval($multiplier));
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'last_name', 'must_be_between_3_and_120_characters')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithIncorrectLastName(ApiTester $I)
+	{
+		$this->userData['payload']['last_name'] = $this->userData['payload']['last_name'] . strval(rand(1, 99));
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'last_name', 'can_contain_only_letters_and_dash')
+		);
+	}
+
+	/**
 	 * @param string $type
 	 * @param string $property
 	 * @param string $message

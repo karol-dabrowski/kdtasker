@@ -73,6 +73,57 @@ class RegisterCest
 	/**
 	 * @param ApiTester $I
 	 */
+	public function registerWithoutId(ApiTester $I)
+	{
+		unset($this->userData['payload']['user_id']);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'user_id', 'is_required')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithIncorrectId(ApiTester $I)
+	{
+		$this->userData['payload']['user_id'] = 'incorrect-user-id';
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'user_id', 'must_be_correct_uuid')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 * @throws \Exception
+	 */
+	public function registerWithAlreadyUsedId(ApiTester $I)
+	{
+		UserFixture::load(
+			$I,
+			$this->userData['payload']['user_id'],
+			$this->userData['payload']['email'],
+			$this->userData['payload']['password'],
+			$this->userData['payload']['first_name'],
+			$this->userData['payload']['last_name']
+		);
+
+		$this->userData['payload']['email'] = Factory::create()->email;
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'id', 'this_id_is_already_used')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
 	public function registerWithIncorrectEmail(ApiTester $I)
 	{
 		$this->userData['payload']['email'] = 'IncorrectEmailAddress';

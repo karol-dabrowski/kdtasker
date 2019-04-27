@@ -317,6 +317,79 @@ class RegisterCest
 	}
 
 	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithoutPassword(ApiTester $I)
+	{
+		unset($this->userData['payload']['password']);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'password', 'is_required')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithNonStringPassword(ApiTester $I)
+	{
+		$this->userData['payload']['password'] = rand(10000000, 9999999999);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'password', 'must_be_a_string')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithTooShortPassword(ApiTester $I)
+	{
+		$this->userData['payload']['password'] = substr($this->userData['payload']['password'], 0, 7);
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'password', 'must_be_between_8_and_30_characters')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithTooLongPassword(ApiTester $I)
+	{
+		$passwordLength = strlen($this->userData['payload']['password']);
+		$multiplier = ceil(30 / $passwordLength) + 1;
+		$this->userData['payload']['password'] = str_repeat($this->userData['payload']['password'], intval($multiplier));
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'password', 'must_be_between_8_and_30_characters')
+		);
+	}
+
+	/**
+	 * @param ApiTester $I
+	 */
+	public function registerWithIncorrectPassword(ApiTester $I)
+	{
+		$incorrectPassword = preg_replace("/[0-9]/", "", $this->userData['payload']['password']);
+		$this->userData['payload']['password'] = $incorrectPassword;
+
+		$I->sendPOST(self::REGISTER_PATH, $this->userData);
+		$I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+		$I->seeResponseContainsJson(
+			$this->createErrorJsonResponse('validation_error', 'password', 'must_contain_at_least_one_letter_and_number')
+		);
+	}
+
+	/**
 	 * @param string $type
 	 * @param string $property
 	 * @param string $message

@@ -9,7 +9,7 @@ use Tasker\Model\Task\Event\TaskCreated;
 
 /**
  * Class TaskTest
- * @package App\Tests
+ * @package App\Tests\Unit\Task
  */
 class TaskTest extends \Codeception\Test\Unit
 {

@@ -12,11 +12,6 @@ use Tasker\Model\Task\Domain\TaskId;
  */
 class TaskIdTest extends \Codeception\Test\Unit
 {
-	/**
-	 * @var \App\Tests\UnitTester
-	 */
-	protected $tester;
-
 	public function testTaskIdCanBeGenerated()
 	{
 		$taskId = TaskId::generate();

@@ -12,11 +12,6 @@ use Tasker\Model\User\Domain\UserId;
  */
 class UserIdTest extends \Codeception\Test\Unit
 {
-	/**
-	 * @var \App\Tests\UnitTester
-	 */
-	protected $tester;
-
 	public function testUserIdCanBeGenerated()
 	{
 		$userId = UserId::generate();

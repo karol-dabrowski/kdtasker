@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Task;
 
+use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
 use Tasker\Model\Task\Domain\TaskId;
 
@@ -30,6 +31,13 @@ class TaskIdTest extends \Codeception\Test\Unit
 		$this->assertInstanceOf(TaskId::class, $taskId);
 		$this->assertIsString($taskId->toString());
 		$this->assertSame($taskIdString, $taskId->toString());
+	}
+
+	public function testUserIdThrowsExceptionWhenCreatingFromIncorrectString()
+	{
+		$invalidUuidString = 'Invalid-UUID-string';
+		$this->expectException(InvalidUuidStringException::class);
+		TaskId::fromString($invalidUuidString);
 	}
 
 	public function testTaskIdCanBeCompared()

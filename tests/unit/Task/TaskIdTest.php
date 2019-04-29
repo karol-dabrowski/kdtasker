@@ -33,7 +33,7 @@ class TaskIdTest extends \Codeception\Test\Unit
 		$this->assertSame($taskIdString, $taskId->toString());
 	}
 
-	public function testUserIdThrowsExceptionWhenCreatingFromIncorrectString()
+	public function testUserIdThrowsAnExceptionWhenCreatingFromIncorrectString()
 	{
 		$invalidUuidString = 'Invalid-UUID-string';
 		$this->expectException(InvalidUuidStringException::class);

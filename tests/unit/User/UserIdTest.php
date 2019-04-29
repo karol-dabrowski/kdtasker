@@ -33,7 +33,7 @@ class UserIdTest extends \Codeception\Test\Unit
 		$this->assertSame($userIdString, $userId->toString());
 	}
 
-	public function testUserIdThrowsExceptionWhenCreatingFromIncorrectString()
+	public function testUserIdThrowsAnExceptionWhenCreatingFromIncorrectString()
 	{
 		$invalidUuidString = 'Invalid-UUID-string';
 		$this->expectException(InvalidUuidStringException::class);

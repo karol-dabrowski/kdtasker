@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Tests\Unit\User;
 
 use Faker\Factory;
-use Faker\Generator;
 use Tasker\Model\User\Domain\User;
 use Tasker\Model\User\Domain\UserEmail;
 use Tasker\Model\User\Domain\UserId;

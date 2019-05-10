@@ -7,7 +7,16 @@ prooph_event_store:
                     repository_class: Tasker\Infrastructure\Repository\TaskEventStore
                     aggregate_type: Tasker\Model\Task\Domain\Task
                     aggregate_translator: prooph_event_sourcing.aggregate_translator
-
+    projection_managers:
+        task_projection_manager:
+            event_store: '@prooph_event_store.mysql_event_store.tasker_store'
+            connection: '@doctrine.pdo.connection'
+            event_streams_table: event_streams
+            projections_table: projections
+            projections:
+                task_projection:
+                    read_model: '@prooph_event_store.read_model.task_read_model'
+                    projection: '@prooph_event_store.projection.task_projection'
 
 services:
     prooph_event_store.mysql_event_store.tasker_store:
@@ -23,3 +32,10 @@ services:
 
     prooph_event_sourcing.aggregate_translator:
         class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
+
+    prooph_event_store.projection.task_projection:
+        class: Tasker\Infrastructure\Projection\Task\TaskProjection
+
+    prooph_event_store.read_model.task_read_model:
+        class: Tasker\Infrastructure\Projection\Task\TaskReadModel
+        arguments: ['@mongo.connection.default']

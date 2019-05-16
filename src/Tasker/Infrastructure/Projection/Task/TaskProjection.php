@@ -20,7 +20,7 @@ class TaskProjection implements ReadModelProjection
 	public function project(ReadModelProjector $projector): ReadModelProjector
 	{
 		$projector->fromStream('event_stream')->whenAny(
-			function (AggregateChanged $event) {
+			function ($state, AggregateChanged $event) {
 				$readModel = $this->readModel();
 				$readModel($event);
 			}

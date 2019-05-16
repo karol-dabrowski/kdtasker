@@ -38,10 +38,10 @@ class CreateTask extends Command implements PayloadConstructable
 	 */
 	protected function setPayload(array $payload): void
 	{
-		Assertion::keyExists($payload, 'task_id');
-		Assertion::uuid($payload['task_id']);
-		Assertion::keyExists($payload, 'title');
-		Assertion::string($payload['title']);
+		Assertion::keyExists($payload, 'task_id', 'task_id|is_required');
+		Assertion::uuid($payload['task_id'], 'task_id|must_be_correct_uuid');
+		Assertion::keyExists($payload, 'title', 'title|is_required');
+		Assertion::string($payload['title'], 'title|must_be_a_string');
 		$this->payload = $payload;
 	}
 }

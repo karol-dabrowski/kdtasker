@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Util\Response\ErrorResponseFactory;
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,8 +48,12 @@ final class ApiController
 		$commandName = $request->attributes->get(self::NAME_ATTRIBUTE);
 		$payload = ['payload' => $data['payload']];
 
-		$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
-		$this->commandBus->dispatch($command);
+		try {
+			$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
+			$this->commandBus->dispatch($command);
+		} catch(\Exception $exception) {
+			return ErrorResponseFactory::createResponse($exception);
+		}
 
 		return new JsonResponse();
 	}

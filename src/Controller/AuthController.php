@@ -49,7 +49,7 @@ final class AuthController
 		try {
 			$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
 			$this->commandBus->dispatch($command);
-		} catch (\Exception $exception) {
+		} catch(\Exception $exception) {
 			return ErrorResponseFactory::createResponse($exception);
 		}
 

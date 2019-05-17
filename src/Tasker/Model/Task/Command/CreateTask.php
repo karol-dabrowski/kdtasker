@@ -8,6 +8,7 @@ use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
 use Tasker\Model\Task\Domain\TaskId;
 use Assert\Assertion;
+use Tasker\Model\User\Domain\UserId;
 
 /**
  * Class CreateTask
@@ -34,6 +35,22 @@ class CreateTask extends Command implements PayloadConstructable
 	}
 
 	/**
+	 * @return UserId
+	 */
+	public function creatorId(): UserId
+	{
+		return UserId::fromString($this->payload['user_id']);
+	}
+
+	/**
+	 * @return UserId
+	 */
+	public function assigneeId(): UserId
+	{
+		return UserId::fromString($this->payload['user_id']);
+	}
+
+	/**
 	 * @param array $payload
 	 */
 	protected function setPayload(array $payload): void
@@ -42,6 +59,8 @@ class CreateTask extends Command implements PayloadConstructable
 		Assertion::uuid($payload['task_id'], 'task_id|must_be_correct_uuid');
 		Assertion::keyExists($payload, 'title', 'title|is_required');
 		Assertion::string($payload['title'], 'title|must_be_a_string');
+		Assertion::keyExists($payload, 'user_id', 'user_id|is_required');
+		Assertion::uuid($payload['user_id'], 'user_id|must_be_correct_uuid');
 		$this->payload = $payload;
 	}
 }

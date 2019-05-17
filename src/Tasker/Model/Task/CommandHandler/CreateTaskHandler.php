@@ -34,7 +34,9 @@ class CreateTaskHandler
 	{
 		$task = Task::create(
 			$command->taskId(),
-			$command->title()
+			$command->title(),
+			$command->creatorId(),
+			$command->assigneeId()
 		);
 
 		$this->tasks->save($task);

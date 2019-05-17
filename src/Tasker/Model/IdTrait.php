@@ -5,7 +5,6 @@ namespace Tasker\Model;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-use Tasker\Model\Task\Domain\TaskId;
 
 /**
  * Trait IdTrait
@@ -19,7 +18,7 @@ trait IdTrait
 	private $uuid;
 
 	/**
-	 * TaskId constructor.
+	 * IdTrait constructor.
 	 * @param UuidInterface $uuid
 	 */
 	private function __construct(UuidInterface $uuid)
@@ -28,7 +27,7 @@ trait IdTrait
 	}
 
 	/**
-	 * @return TaskId
+	 * @return Id
 	 * @throws \Exception
 	 */
 	public static function generate(): Id
@@ -37,12 +36,12 @@ trait IdTrait
 	}
 
 	/**
-	 * @param string $taskId
-	 * @return TaskId
+	 * @param string $idString
+	 * @return Id
 	 */
-	public static function fromString(string $taskId): Id
+	public static function fromString(string $idString): Id
 	{
-		return new self(Uuid::fromString($taskId));
+		return new self(Uuid::fromString($idString));
 	}
 
 	/**

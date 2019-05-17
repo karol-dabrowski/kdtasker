@@ -64,13 +64,10 @@ final class ApiController
 	 */
 	public function postAction(Request $request)
 	{
-		$decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
-		$userId = $decodedJwtToken['user_id'];
-
 		$data = json_decode($request->getContent(), true);
 		$commandName = $request->attributes->get(self::NAME_ATTRIBUTE);
 		$payload = ['payload' => $data['payload']];
-		$payload['payload']['user_id'] = $userId;
+		$payload['payload']['user_id'] = $this->getRequesterID();
 
 		try {
 			$command = $this->messageFactory->createMessageFromArray($commandName, $payload);
@@ -80,5 +77,18 @@ final class ApiController
 		}
 
 		return new JsonResponse();
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getRequesterID(): string
+	{
+		$decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
+		if(!isset($decodedJwtToken['user_id'])) {
+			throw new \RuntimeException('user_id|is_missing', JsonResponse::HTTP_NOT_ACCEPTABLE);
+		}
+
+		return $decodedJwtToken['user_id'];
 	}
 }

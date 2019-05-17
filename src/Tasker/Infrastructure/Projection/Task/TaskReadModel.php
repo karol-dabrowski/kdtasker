@@ -7,6 +7,7 @@ use MongoDB\Database;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventStore\Projection\AbstractReadModel;
 use Tasker\Infrastructure\Projection\Table;
+use Tasker\Model\Task\Event\TaskCreated;
 
 /**
  * Class TaskReadModel
@@ -33,12 +34,18 @@ class TaskReadModel extends AbstractReadModel
 	 */
 	public function __invoke(AggregateChanged $event)
 	{
-		// TODO: Implement __invoke() method.
+		switch(true) {
+			case $event instanceof TaskCreated:
+				$this->insertTask($event);
+				break;
+		}
 	}
 
 	public function init(): void
 	{
 		$this->mongoConnection->createCollection(Table::READ_MONGO_TASKS);
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
+		$collection->createIndex(['task_id' => 1], ['unique' => true]);
 	}
 
 	/**
@@ -64,5 +71,24 @@ class TaskReadModel extends AbstractReadModel
 	public function delete(): void
 	{
 		// TODO: Implement delete() method.
+	}
+
+	/**
+	 * @param TaskCreated $event
+	 */
+	private function insertTask(TaskCreated $event)
+	{
+		$task = [
+			'task_id' => $event->taskId()->toString(),
+			'current_state' => [
+				'title' => $event->title()
+			]
+		];
+
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
+
+		if($collection->countDocuments(['task_id' => $task['task_id']]) === 0) {
+			$collection->insertOne($task);
+		}
 	}
 }

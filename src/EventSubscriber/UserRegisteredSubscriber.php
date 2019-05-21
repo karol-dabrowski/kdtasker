@@ -6,9 +6,13 @@ namespace App\EventSubscriber;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use MongoDB\Database;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Tasker\Infrastructure\Projection\Table;
 use Tasker\Model\User\Domain\User;
+use Tasker\Model\User\Domain\UserId;
+use Tasker\Model\User\Domain\UserName;
 
 /**
  * Class UserRegisteredSubscriber
@@ -22,12 +26,19 @@ final class UserRegisteredSubscriber implements EventSubscriber
 	private $requestStack;
 
 	/**
+	 * @var Database
+	 */
+	private $mongoConnection;
+
+	/**
 	 * UserRegisteredSubscriber constructor.
 	 * @param RequestStack $requestStack
+	 * @param Database $mongoConnection
 	 */
-	public function __construct(RequestStack $requestStack)
+	public function __construct(RequestStack $requestStack, Database $mongoConnection)
 	{
 		$this->requestStack = $requestStack;
+		$this->mongoConnection = $mongoConnection;
 	}
 
 	/**
@@ -56,5 +67,22 @@ final class UserRegisteredSubscriber implements EventSubscriber
 
 		$modifiedDateTime = new \DateTime();
 		$entity->setModifiedDateTime($modifiedDateTime);
+
+		$this->insertInitialUserDisplayName($entity->id(), $entity->name());
+	}
+
+	/**
+	 * @param UserId $userId
+	 * @param UserName $userName
+	 */
+	private function insertInitialUserDisplayName(UserId $userId, UserName $userName): void
+	{
+		$user = [
+			'user_id' => $userId->toString(),
+			'display_name' => $userName->toString()
+		];
+
+		$collection = $this->mongoConnection->selectCollection(Table::MONGO_USERS_DISPLAY_NAMES);
+		$collection->insertOne($user);
 	}
 }

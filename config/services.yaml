@@ -42,8 +42,9 @@ services:
     # Doctrine user subscribers
 
     App\EventSubscriber\UserRegisteredSubscriber:
+        arguments: ['@request_stack', '@mongo.connection.default']
         tags:
-            - { name: doctrine.event_subscriber, connection: default }
+            - { name: doctrine.event_subscriber, connection: default, priority: -1 }
 
     App\EventSubscriber\UserRegisteredUniquenessValidatorSubscriber:
         tags:

@@ -120,4 +120,12 @@ class User
 	{
 		return $this->id;
 	}
+
+	/**
+	 * @return UserName
+	 */
+	public function name(): UserName
+	{
+		return $this->username;
+	}
 }

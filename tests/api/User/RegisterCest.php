@@ -8,6 +8,7 @@ use App\Tests\Fixture\UserFixture;
 use Faker\Factory;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response;
+use Tasker\Infrastructure\Projection\Table;
 
 /**
  * Class RegisterCest
@@ -50,7 +51,6 @@ class RegisterCest
 
 	/**
 	 * @param ApiTester $I
-	 * @throws \Exception
 	 */
 	public function registerWithCorrectData(ApiTester $I)
 	{
@@ -59,13 +59,22 @@ class RegisterCest
 		$I->seeResponseContainsJson([]);
 
 		$I->seeInDatabase(
-			'users',
+			Table::USERS,
 			[
 				'id' => $this->userData['payload']['user_id'],
 				'email' => $this->userData['payload']['email'],
 				'first_name' => $this->userData['payload']['first_name'],
 				'last_name' => $this->userData['payload']['last_name'],
 				'confirmed' => 0
+			]
+		);
+
+		$userName = $this->userData['payload']['first_name'] . ' ' . $this->userData['payload']['last_name'];
+		$I->seeInCollection(
+			Table::MONGO_USERS_DISPLAY_NAMES,
+			[
+				'user_id' => $this->userData['payload']['user_id'],
+				'display_name' => $userName
 			]
 		);
 	}

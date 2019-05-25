@@ -89,6 +89,10 @@ final class ApiController
 		return new JsonResponse();
 	}
 
+	/**
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
 	public function getAction(Request $request)
 	{
 		$attributes = $request->attributes->all();

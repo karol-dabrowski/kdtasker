@@ -12,3 +12,5 @@ prooph_service_bus:
         tasker_query_bus:
             router:
                 type: 'prooph_service_bus.query_bus_router'
+                routes:
+                    'Tasker\Model\Task\Query\GetTaskById': '@Tasker\Model\Task\QueryHandler\GetTaskByIdHandler'

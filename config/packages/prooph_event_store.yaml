@@ -39,3 +39,7 @@ services:
     prooph_event_store.read_model.task_read_model:
         class: Tasker\Infrastructure\Projection\Task\TaskReadModel
         arguments: ['@mongo.connection.default']
+
+    prooph_event_store.finder.task_finder:
+        class: Tasker\Infrastructure\Projection\Task\TaskFinder
+        arguments: ['@mongo.connection.default']

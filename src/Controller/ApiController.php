@@ -95,8 +95,17 @@ final class ApiController
 		$queryName = $request->attributes->get(self::QUERY_NAME_ATTRIBUTE);
 		$query = QueryFactory::createQuery($queryName, $attributes);
 
-		return new JsonResponse();
+		$response = $this->queryBus->dispatch($query);
+		$finalResponse = null;
+		$response->then(
+			function($value) use (&$finalResponse) {
+				$finalResponse = $value;
+			}
+		);
+
+		return new JsonResponse($finalResponse);
 	}
+
 	/**
 	 * @return string
 	 */

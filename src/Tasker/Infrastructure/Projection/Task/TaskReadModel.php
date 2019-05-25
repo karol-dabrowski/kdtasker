@@ -80,9 +80,8 @@ class TaskReadModel extends AbstractReadModel
 	{
 		$task = [
 			'task_id' => $event->taskId()->toString(),
-			'current_state' => [
-				'title' => $event->title()
-			]
+			'title' => $event->title(),
+			'creator_id' => $event->creatorId()->toString()
 		];
 
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);

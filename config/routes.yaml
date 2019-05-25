@@ -21,3 +21,11 @@ create_task:
     controller: App\Controller\ApiController::postAction
     defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
     methods: POST
+
+get_task:
+    path: /api/task/get/{task_id}
+    requirements:
+        task_id: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+    controller: App\Controller\ApiController::getAction
+    defaults: { query: 'Tasker\Model\Task\Query\GetTaskById' }
+    methods: GET

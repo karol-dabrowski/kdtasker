@@ -13,7 +13,7 @@ services:
     # Controllers
 
     App\Controller\ApiController:
-        arguments: ['@prooph_service_bus.tasker_command_bus', '@prooph_service_bus.message_factory', '@security.token_storage', '@lexik_jwt_authentication.jwt_manager']
+        arguments: ['@prooph_service_bus.tasker_command_bus', '@prooph_service_bus.tasker_query_bus', '@prooph_service_bus.message_factory', '@security.token_storage', '@lexik_jwt_authentication.jwt_manager']
         tags: ['controller.service_arguments']
 
     App\Controller\AuthController:

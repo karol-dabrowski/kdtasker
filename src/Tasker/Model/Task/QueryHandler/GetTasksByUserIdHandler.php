@@ -30,10 +30,16 @@ class GetTasksByUserIdHandler
 	/**
 	 * @param GetTasksByUserId $query
 	 * @param Deferred|null $deferred
-	 * @return array
+	 * @return array|null
 	 */
 	public function __invoke(GetTasksByUserId $query, Deferred $deferred = null)
 	{
-		//TODO implement invoke method
+		$response = $this->taskFinder->findUserTasks($query->userId());
+
+		if (null === $deferred) {
+			return $response;
+		}
+
+		$deferred->resolve($response);
 	}
 }

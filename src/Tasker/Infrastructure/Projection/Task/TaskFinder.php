@@ -6,6 +6,7 @@ namespace Tasker\Infrastructure\Projection\Task;
 use MongoDB\Database;
 use Tasker\Infrastructure\Projection\Table;
 use Tasker\Model\Task\Domain\TaskId;
+use Tasker\Model\User\Domain\UserId;
 
 /**
  * Class TaskFinder
@@ -72,5 +73,28 @@ class TaskFinder
 
 		$tasks = $collection->aggregate($aggregate, $options)->toArray();
 		return $tasks ? $tasks[0] : null;
+	}
+
+	/**
+	 * @param UserId $id
+	 * @return array|null
+	 */
+	public function findUserTasks(UserId $id)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_USER_TASKS);
+
+		$filter = [
+			'user_id' => $id->toString()
+		];
+
+		$options = [
+			'typeMap' => [
+				'root' => 'array',
+				'document' => 'array',
+			]
+		];
+
+		$user = $collection->findOne($filter, $options);
+		return $user ? $user['tasks'] : null;
 	}
 }

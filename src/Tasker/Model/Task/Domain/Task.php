@@ -35,16 +35,28 @@ class Task extends AggregateRoot
 	private $assigneeId;
 
 	/**
+	 * @var TaskDeadline
+	 */
+	private $deadline;
+
+	/**
 	 * @param TaskId $taskId
 	 * @param string $title
 	 * @param UserId $creatorId
 	 * @param UserId $assigneeId
+	 * @param TaskDeadline $deadline
 	 * @return Task
 	 */
-	public static function create(TaskId $taskId, string $title, UserId $creatorId, UserId $assigneeId): Task
+	public static function create(
+		TaskId $taskId,
+		string $title,
+		UserId $creatorId,
+		UserId $assigneeId,
+		TaskDeadline $deadline
+	): Task
 	{
 		$self = new self();
-		$self->recordThat(TaskCreated::create($taskId, $title, $creatorId, $assigneeId));
+		$self->recordThat(TaskCreated::create($taskId, $title, $creatorId, $assigneeId, $deadline));
 
 		return $self;
 	}
@@ -82,6 +94,14 @@ class Task extends AggregateRoot
 	}
 
 	/**
+	 * @return TaskDeadline
+	 */
+	public function deadline(): TaskDeadline
+	{
+		return $this->deadline;
+	}
+
+	/**
 	 * @return string
 	 */
 	protected function aggregateId(): string
@@ -91,6 +111,7 @@ class Task extends AggregateRoot
 
 	/**
 	 * @param AggregateChanged $event
+	 * @throws \Exception
 	 */
 	protected function apply(AggregateChanged $event): void
 	{
@@ -103,6 +124,7 @@ class Task extends AggregateRoot
 
 	/**
 	 * @param TaskCreated $event
+	 * @throws \Exception
 	 */
 	protected function whenTaskCreated(TaskCreated $event): void
 	{
@@ -110,5 +132,6 @@ class Task extends AggregateRoot
 		$this->title = $event->title();
 		$this->creatorId = $event->creatorId();
 		$this->assigneeId = $event->assigneeId();
+		$this->deadline = $event->deadline();
 	}
 }

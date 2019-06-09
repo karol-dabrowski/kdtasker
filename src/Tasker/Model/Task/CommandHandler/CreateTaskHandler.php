@@ -29,6 +29,7 @@ class CreateTaskHandler
 
 	/**
 	 * @param CreateTask $command
+	 * @throws \Exception
 	 */
 	public function __invoke(CreateTask $command): void
 	{
@@ -36,7 +37,8 @@ class CreateTaskHandler
 			$command->taskId(),
 			$command->title(),
 			$command->creatorId(),
-			$command->assigneeId()
+			$command->assigneeId(),
+			$command->deadline()
 		);
 
 		$this->tasks->save($task);

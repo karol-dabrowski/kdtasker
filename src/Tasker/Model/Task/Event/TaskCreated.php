@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tasker\Model\Task\Event;
 
 use Prooph\EventSourcing\AggregateChanged;
+use Tasker\Model\Task\Domain\TaskDeadline;
 use Tasker\Model\Task\Domain\TaskId;
 use Tasker\Model\User\Domain\UserId;
 
@@ -34,20 +35,34 @@ final class TaskCreated extends AggregateChanged
 	private $assigneeId;
 
 	/**
+	 * @var TaskDeadline
+	 */
+	private $deadline;
+
+	/**
 	 * @param TaskId $taskId
 	 * @param string $title
 	 * @param UserId $creatorId
 	 * @param UserId $assigneeId
+	 * @param TaskDeadline $deadline
 	 * @return TaskCreated
 	 */
-	public static function create(TaskId $taskId, string $title, UserId $creatorId, UserId $assigneeId): TaskCreated
+	public static function create(
+		TaskId $taskId,
+		string $title,
+		UserId $creatorId,
+		UserId $assigneeId,
+		TaskDeadline $deadline
+	): TaskCreated
 	{
 		$event = self::occur(
 			$taskId->toString(),
 			[
 				'title' => $title,
 				'creator_id' => $creatorId->toString(),
-				'assignee_id' => $assigneeId->toString()
+				'assignee_id' => $assigneeId->toString(),
+				'deadline_date' => $deadline->dateToString(),
+				'deadline_time' => $deadline->timeToString()
 			]
 		);
 
@@ -55,6 +70,7 @@ final class TaskCreated extends AggregateChanged
 		$event->title = $title;
 		$event->creatorId = $creatorId;
 		$event->assigneeId = $assigneeId;
+		$event->deadline = $deadline;
 
 		return $event;
 	}
@@ -105,5 +121,18 @@ final class TaskCreated extends AggregateChanged
 		}
 
 		return $this->assigneeId;
+	}
+
+	/**
+	 * @return TaskDeadline
+	 * @throws \Exception
+	 */
+	public function deadline(): TaskDeadline
+	{
+		if(null === $this->deadline) {
+			$this->deadline = TaskDeadline::fromString($this->payload['deadline_date'], $this->payload['deadline_time']);
+		}
+
+		return $this->deadline;
 	}
 }

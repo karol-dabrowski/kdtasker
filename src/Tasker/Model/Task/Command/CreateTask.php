@@ -6,6 +6,7 @@ namespace Tasker\Model\Task\Command;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
+use Tasker\Model\Task\Domain\TaskDeadline;
 use Tasker\Model\Task\Domain\TaskId;
 use Assert\Assertion;
 use Tasker\Model\User\Domain\UserId;
@@ -51,6 +52,16 @@ class CreateTask extends Command implements PayloadConstructable
 	}
 
 	/**
+	 * @return TaskDeadline
+	 * @throws \Exception
+	 */
+	public function deadline(): TaskDeadline
+	{
+		$deadlineTime = isset($this->payload['deadline_time']) ? $this->payload['deadline_time'] : null;
+		return TaskDeadline::fromString($this->payload['deadline_date'], $deadlineTime);
+	}
+
+	/**
 	 * @param array $payload
 	 */
 	protected function setPayload(array $payload): void
@@ -61,6 +72,13 @@ class CreateTask extends Command implements PayloadConstructable
 		Assertion::string($payload['title'], 'title|must_be_a_string');
 		Assertion::keyExists($payload, 'user_id', 'user_id|is_required');
 		Assertion::uuid($payload['user_id'], 'user_id|must_be_correct_uuid');
+		Assertion::keyExists($payload, 'deadline_date', 'deadline_date|is_required');
+		Assertion::date($payload['deadline_date'], 'Y-m-d', 'deadline_date|is_incorrect');
+
+		if(isset($payload['deadline_time'])) {
+			Assertion::date($payload['deadline_time'], 'H:i', 'deadline_time|is_incorrect');
+		}
+
 		$this->payload = $payload;
 	}
 }

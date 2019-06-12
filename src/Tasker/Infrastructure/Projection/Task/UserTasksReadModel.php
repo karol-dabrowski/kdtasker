@@ -3,11 +3,13 @@ declare( strict_types=1 );
 
 namespace Tasker\Infrastructure\Projection\Task;
 
+use MongoDB\Collection;
 use MongoDB\Database;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventStore\Projection\AbstractReadModel;
 use Tasker\Infrastructure\Projection\Table;
 use Tasker\Model\Task\Event\TaskCreated;
+use Tasker\Model\User\Domain\UserId;
 
 /**
  * Class UserTasksReadModel
@@ -31,6 +33,7 @@ class UserTasksReadModel extends AbstractReadModel
 
 	/**
 	 * @param AggregateChanged $event
+	 * @throws \Exception
 	 */
 	public function __invoke(AggregateChanged $event)
 	{
@@ -75,32 +78,83 @@ class UserTasksReadModel extends AbstractReadModel
 
 	/**
 	 * @param TaskCreated $event
+	 * @throws \Exception
 	 */
 	private function insertTask(TaskCreated $event)
 	{
-		$userId = $event->creatorId()->toString();
+		$userId = $event->creatorId();
+		$deadlineDate = $event->deadline()->dateToString();
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_USER_TASKS);
 
-		if($collection->countDocuments(['user_id' => $userId]) === 0) {
-			$user = [
-				'user_id' => $userId,
-				'tasks' => []
-			];
-			$collection->insertOne($user);
+		if($collection->countDocuments(['user_id' => $userId->toString()]) === 0) {
+			$this->createUserDocument($collection, $userId);
+		}
+
+		$userDateFilter = [
+			'user_id' => $userId->toString(),
+			'days' => [
+				'$elemMatch' => [
+					'date' => $deadlineDate
+				]
+			]
+		];
+
+		if($collection->countDocuments($userDateFilter) === 0) {
+			$this->createUserDayDocument($collection, $userId, $deadlineDate);
 		}
 
 		$task = [
 			'id' => $event->taskId()->toString(),
-			'title' => $event->title()
+		    'title' => $event->title(),
+			'time' => $event->deadline()->timeToString()
 		];
 
 		$collection->updateOne(
+			$userDateFilter,
 			[
-				'user_id' => $userId
+				'$push' => [
+					'days.$.tasks_list' => [
+						'$each' => [$task],
+						'$sort' => [
+							'time' => 1
+						]
+					]
+				]
+			]
+		);
+	}
+
+	/**
+	 * @param Collection $collection
+	 * @param UserId $userId
+	 */
+	private function createUserDocument(Collection $collection, UserId $userId): void
+	{
+		$user = [
+			'user_id' => $userId->toString(),
+			'days' => []
+		];
+
+		$collection->insertOne($user);
+	}
+
+	/**
+	 * @param Collection $collection
+	 * @param UserId $userId
+	 * @param string $deadlineDate
+	 */
+	private function createUserDayDocument(Collection $collection, UserId $userId, string $deadlineDate): void
+	{
+		$collection->updateOne(
+			[
+				'user_id' => $userId->toString()
 			],
 			[
 				'$addToSet' => [
-					'tasks' => $task
+					'days' => [
+						'date' => $deadlineDate,
+						'tasks_list' => []
+					]
 				]
 			]
 		);

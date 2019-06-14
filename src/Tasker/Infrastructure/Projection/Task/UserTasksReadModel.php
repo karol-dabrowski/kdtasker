@@ -68,12 +68,13 @@ class UserTasksReadModel extends AbstractReadModel
 
 	public function reset(): void
 	{
-		// TODO: Implement reset() method.
+		$this->mongoConnection->dropCollection(Table::READ_MONGO_USER_TASKS);
+		$this->init();
 	}
 
 	public function delete(): void
 	{
-		// TODO: Implement delete() method.
+		$this->mongoConnection->dropCollection(Table::READ_MONGO_USER_TASKS);
 	}
 
 	/**

@@ -97,6 +97,7 @@ final class ApiController
 	{
 		$attributes = $request->attributes->all();
 		$queryName = $request->attributes->get(self::QUERY_NAME_ATTRIBUTE);
+		$attributes['authenticated_user_id'] = $this->getRequesterID();
 		$query = QueryFactory::createQuery($queryName, $attributes);
 
 		$response = $this->queryBus->dispatch($query);

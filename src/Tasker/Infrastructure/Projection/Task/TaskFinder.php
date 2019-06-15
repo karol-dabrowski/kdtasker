@@ -36,12 +36,6 @@ class TaskFinder
 	{
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
 		$filters = ['task_id' => $id->toString()];
-		$options = [
-			'typeMap' => [
-				'root' => 'array',
-				'document' => 'array',
-			]
-		];
 
 		$aggregate = [
 			['$match' => $filters],
@@ -71,7 +65,7 @@ class TaskFinder
 			]
 		];
 
-		$tasks = $collection->aggregate($aggregate, $options)->toArray();
+		$tasks = $collection->aggregate($aggregate, $this->getOptions())->toArray();
 		return $tasks ? $tasks[0] : null;
 	}
 
@@ -87,14 +81,7 @@ class TaskFinder
 			'user_id' => $id->toString()
 		];
 
-		$options = [
-			'typeMap' => [
-				'root' => 'array',
-				'document' => 'array',
-			]
-		];
-
-		$user = $collection->findOne($filter, $options);
+		$user = $collection->findOne($filter, $this->getOptions());
 		return $user ? $user['tasks'] : null;
 	}
 
@@ -128,14 +115,20 @@ class TaskFinder
 			]
 		];
 
-		$options = [
+		$response = $collection->aggregate($aggregate, $this->getOptions())->toArray();
+		return $response;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getOptions(): array
+	{
+		return [
 			'typeMap' => [
 				'root' => 'array',
 				'document' => 'array',
 			]
 		];
-
-		$response = $collection->aggregate($aggregate, $options)->toArray();
-		return $response;
 	}
 }

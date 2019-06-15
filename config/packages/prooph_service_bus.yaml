@@ -15,3 +15,4 @@ prooph_service_bus:
                 routes:
                     'Tasker\Model\Task\Query\GetTaskById': '@Tasker\Model\Task\QueryHandler\GetTaskByIdHandler'
                     'Tasker\Model\Task\Query\GetTasksByUserId': '@Tasker\Model\Task\QueryHandler\GetTasksByUserIdHandler'
+                    'Tasker\Model\Task\Query\GetUserTodaysTasks': '@Tasker\Model\Task\QueryHandler\GetUserTodaysTasksHandler'

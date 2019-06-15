@@ -37,3 +37,9 @@ get_tasks_by_user_id:
     controller: App\Controller\ApiController::getAction
     defaults: { query: 'Tasker\Model\Task\Query\GetTasksByUserId' }
     methods: GET
+
+get_user_todays_tasks:
+    path: /api/tasks/getTodaysTasks
+    controller: App\Controller\ApiController::getAction
+    defaults: { query: 'Tasker\Model\Task\Query\GetUserTodaysTasks' }
+    methods: GET

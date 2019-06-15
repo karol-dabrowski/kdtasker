@@ -97,4 +97,45 @@ class TaskFinder
 		$user = $collection->findOne($filter, $options);
 		return $user ? $user['tasks'] : null;
 	}
+
+	/**
+	 * @param UserId $id
+	 * @param string $day
+	 * @return array
+	 */
+	public function findExtendedUserTasksForSpecifiedDay(UserId $id, string $day)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_USER_TASKS);
+
+		$aggregate = [
+			[
+				'$match' => [
+					'user_id' => $id->toString()
+				]
+			],
+			[
+				'$unwind' => '$days'
+			],
+			[
+				'$replaceRoot' => [
+					'newRoot' => '$days'
+				]
+			],
+			[
+				'$match' => [
+					'date' => $day
+				]
+			]
+		];
+
+		$options = [
+			'typeMap' => [
+				'root' => 'array',
+				'document' => 'array',
+			]
+		];
+
+		$response = $collection->aggregate($aggregate, $options)->toArray();
+		return $response;
+	}
 }

@@ -30,3 +30,9 @@ nelmio_cors:
             allow_methods: ['POST']
             allow_headers: ['*']
             max_age: 3600
+        '^/api/tasks/getTodaysTasks$':
+            allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+            origin_regex: true
+            allow_methods: ['GET']
+            allow_headers: ['*']
+            max_age: 3600

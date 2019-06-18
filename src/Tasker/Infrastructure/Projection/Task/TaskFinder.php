@@ -101,6 +101,9 @@ class TaskFinder
 				]
 			],
 			[
+				'$limit' => 1
+			],
+			[
 				'$unwind' => '$days'
 			],
 			[
@@ -116,7 +119,7 @@ class TaskFinder
 		];
 
 		$response = $collection->aggregate($aggregate, $this->getOptions())->toArray();
-		return $response;
+		return $response ? $response[0] : null;
 	}
 
 	/**

@@ -14,7 +14,6 @@ use Symfony\Component\Process\Process;
  */
 final class RunAllProjectionsCommand extends Command
 {
-
 	protected function configure()
 	{
 		$this->setName('event-store:projections:run-all')
@@ -28,7 +27,7 @@ final class RunAllProjectionsCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$migrations = ['task_projection'];
+		$migrations = ['task_projection', 'open_task_projection'];
 
 		foreach ($migrations as $migration) {
 			$process = new Process(

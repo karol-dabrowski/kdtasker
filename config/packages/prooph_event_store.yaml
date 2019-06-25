@@ -17,6 +17,9 @@ prooph_event_store:
                 task_projection:
                     read_model: '@prooph_event_store.read_model.task_read_model'
                     projection: '@prooph_event_store.projection.task_projection'
+                open_task_projection:
+                    read_model: '@prooph_event_store.read_model.open_task_read_model'
+                    projection: '@prooph_event_store.projection.open_task_projection'
 
 services:
     prooph_event_store.mysql_event_store.tasker_store:
@@ -38,6 +41,13 @@ services:
 
     prooph_event_store.read_model.task_read_model:
         class: Tasker\Infrastructure\Projection\Task\TaskReadModel
+        arguments: ['@mongo.connection.default']
+
+    prooph_event_store.projection.open_task_projection:
+        class: Tasker\Infrastructure\Projection\Task\OpenTaskProjection
+
+    prooph_event_store.read_model.open_task_read_model:
+        class: Tasker\Infrastructure\Projection\Task\OpenTaskReadModel
         arguments: ['@mongo.connection.default']
 
     prooph_event_store.finder.task_finder:

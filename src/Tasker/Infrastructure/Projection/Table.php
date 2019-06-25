@@ -8,5 +8,5 @@ final class Table
 	const USERS = 'users';
 	const MONGO_USERS_DISPLAY_NAMES = 'users_display_names';
 	const READ_MONGO_TASKS = 'tasks_collection';
-	const READ_MONGO_USER_TASKS = 'user_tasks_collection';
+	const READ_MONGO_OPEN_TASKS = 'open_tasks_collection';
 }

@@ -75,8 +75,14 @@ final class ApiController
 	public function postAction(Request $request)
 	{
 		$data = json_decode($request->getContent(), true);
+		if(!$data['payload']) {
+			$data['payload'] = [];
+		}
+
+		$attributes = $request->attributes->all();
 		$commandName = $request->attributes->get(self::COMMAND_NAME_ATTRIBUTE);
-		$payload = ['payload' => $data['payload']];
+		$payload = ['payload' => array_merge($data['payload'], $attributes['_route_params'])];
+		unset($payload['payload']['command']);
 		$payload['payload']['user_id'] = $this->getRequesterID();
 
 		try {

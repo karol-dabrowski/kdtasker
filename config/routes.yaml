@@ -22,6 +22,14 @@ create_task:
     defaults: { command: 'Tasker\Model\Task\Command\CreateTask' }
     methods: POST
 
+finish_task:
+    path: /api/task/finish/{task_id}
+    requirements:
+        task_id: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+    controller: App\Controller\ApiController::postAction
+    defaults: { command: 'Tasker\Model\Task\Command\FinishTask' }
+    methods: PATCH
+
 get_task:
     path: /api/task/get/{task_id}
     requirements:

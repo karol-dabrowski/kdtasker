@@ -32,6 +32,11 @@ services:
         tags:
             - { name: 'prooph_service_bus.tasker_command_bus.route_target', message_detection: true }
 
+    Tasker\Model\Task\CommandHandler\FinishTaskHandler:
+        arguments: ['@task_repository']
+        tags:
+            - { name: 'prooph_service_bus.tasker_command_bus.route_target', message_detection: true }
+
     # Query handlers - task context
 
     Tasker\Model\Task\QueryHandler\GetTaskByIdHandler:

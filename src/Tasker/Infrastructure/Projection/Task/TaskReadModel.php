@@ -3,11 +3,15 @@ declare( strict_types=1 );
 
 namespace Tasker\Infrastructure\Projection\Task;
 
+use MongoDB\Collection;
 use MongoDB\Database;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventStore\Projection\AbstractReadModel;
 use Tasker\Infrastructure\Projection\Table;
+use Tasker\Model\Task\Domain\TaskStatus;
+use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
+use Tasker\Model\User\Domain\UserId;
 
 /**
  * Class TaskReadModel
@@ -31,12 +35,16 @@ class TaskReadModel extends AbstractReadModel
 
 	/**
 	 * @param AggregateChanged $event
+	 * @throws \Exception
 	 */
 	public function __invoke(AggregateChanged $event)
 	{
 		switch(true) {
 			case $event instanceof TaskCreated:
 				$this->insertTask($event);
+				break;
+			case $event instanceof TaskCompleted:
+				$this->markTaskAsCompleted($event);
 				break;
 		}
 	}
@@ -76,19 +84,76 @@ class TaskReadModel extends AbstractReadModel
 
 	/**
 	 * @param TaskCreated $event
+	 * @throws \Exception
 	 */
 	private function insertTask(TaskCreated $event)
 	{
-		$task = [
-			'task_id' => $event->taskId()->toString(),
-			'title' => $event->title(),
-			'creator_id' => $event->creatorId()->toString()
-		];
-
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
 
-		if($collection->countDocuments(['task_id' => $task['task_id']]) === 0) {
-			$collection->insertOne($task);
+		$userId = $event->creatorId();
+		$taskId = $event->taskId();
+		$deadlineDate = $event->deadline()->dateToString();
+		$title = $event->title();
+
+		if($collection->countDocuments(['user_id' => $userId->toString()]) === 0) {
+			$this->createUserDocument($collection, $userId);
 		}
+
+		$task = [
+			'task_id' => $taskId->toString(),
+			'deadline_date' => $deadlineDate,
+			'title' => $title,
+			'status' => TaskStatus::OPEN
+		];
+
+		$collection->updateOne(
+			[
+				'user_id' => $userId->toString()
+			],
+			[
+				'$addToSet' => [
+					'days' => $task
+				]
+			]
+		);
+	}
+
+	/**
+	 * @param TaskCompleted $event
+	 */
+	private function markTaskAsCompleted(TaskCompleted $event)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
+
+		$taskId = $event->taskId();
+
+		$collection->updateOne(
+			[
+				'days' => [
+					'$elemMatch' => [
+						'task_id' => $taskId->toString()
+					]
+				]
+			],
+			[
+				'$set' => [
+					'days.$.status' => TaskStatus::COMPLETED
+				]
+			]
+		);
+	}
+
+	/**
+	 * @param Collection $collection
+	 * @param UserId $userId
+	 */
+	private function createUserDocument(Collection $collection, UserId $userId): void
+	{
+		$user = [
+			'user_id' => $userId->toString(),
+			'days' => []
+		];
+
+		$collection->insertOne($user);
 	}
 }

@@ -28,7 +28,7 @@ final class RunAllProjectionsCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$migrations = ['task_projection', 'user_tasks_projection'];
+		$migrations = ['task_projection'];
 
 		foreach ($migrations as $migration) {
 			$process = new Process(

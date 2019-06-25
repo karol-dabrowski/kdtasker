@@ -13,7 +13,7 @@ class ErrorResponseFactory
 {
 	/**
 	 * @param \Exception $e
-	 * @return ValidationErrorResponse|JsonResponse
+	 * @return JsonResponse
 	 */
 	public static function createResponse(\Exception $e): JsonResponse
 	{
@@ -23,6 +23,9 @@ class ErrorResponseFactory
 				break;
 			case $e->getPrevious() instanceof \InvalidArgumentException:
 				return new ValidationErrorResponse($e->getPrevious()->getMessage());
+				break;
+			case $e->getPrevious() instanceof \LogicException:
+				return new LogicErrorResponse($e->getPrevious()->getMessage());
 				break;
 			default:
 				return new JsonResponse(['error' => ['type' => 'unknown_error']], JsonResponse::HTTP_NOT_ACCEPTABLE);

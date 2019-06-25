@@ -51,16 +51,13 @@ class TaskFinder
 	 */
 	public function findExtendedUserTasksForSpecifiedDay(UserId $id, string $day)
 	{
-		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_USER_TASKS);
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_OPEN_TASKS);
 
 		$aggregate = [
 			[
 				'$match' => [
 					'user_id' => $id->toString()
 				]
-			],
-			[
-				'$limit' => 1
 			],
 			[
 				'$unwind' => '$days'
@@ -72,13 +69,13 @@ class TaskFinder
 			],
 			[
 				'$match' => [
-					'date' => $day
+					'deadline_date' => $day
 				]
 			]
 		];
 
 		$response = $collection->aggregate($aggregate, $this->getOptions())->toArray();
-		return $response ? $response[0] : null;
+		return $response;
 	}
 
 	/**

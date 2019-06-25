@@ -5,6 +5,7 @@ namespace Tasker\Model\Task\Domain;
 
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
+use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
 use Tasker\Model\User\Domain\UserId;
 
@@ -23,6 +24,11 @@ class Task extends AggregateRoot
 	 * @var string
 	 */
 	private $title;
+
+	/**
+	 * @var TaskStatus
+	 */
+	private $status;
 
 	/**
 	 * @var UserId
@@ -59,6 +65,15 @@ class Task extends AggregateRoot
 		$self->recordThat(TaskCreated::create($taskId, $title, $creatorId, $assigneeId, $deadline));
 
 		return $self;
+	}
+
+	public function complete(): void
+	{
+		if($this->status !== TaskStatus::OPEN) {
+			throw new \LogicException('task|cannot_be_completed');
+		}
+
+		$this->recordThat(TaskCompleted::create($this->taskId));
 	}
 
 	/**
@@ -119,6 +134,9 @@ class Task extends AggregateRoot
 			case TaskCreated::class:
 				$this->whenTaskCreated($event);
 				break;
+			case TaskCompleted::class:
+				$this->whenTaskCompleted($event);
+				break;
 		}
 	}
 
@@ -133,5 +151,14 @@ class Task extends AggregateRoot
 		$this->creatorId = $event->creatorId();
 		$this->assigneeId = $event->assigneeId();
 		$this->deadline = $event->deadline();
+		$this->status = TaskStatus::OPEN;
+	}
+
+	/**
+	 * @param TaskCompleted $event
+	 */
+	protected function whenTaskCompleted(TaskCompleted $event): void
+	{
+		$this->status = TaskStatus::COMPLETED;
 	}
 }

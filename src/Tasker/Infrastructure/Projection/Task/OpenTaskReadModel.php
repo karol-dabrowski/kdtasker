@@ -11,6 +11,7 @@ use Tasker\Infrastructure\Projection\Table;
 use Tasker\Model\Task\Domain\TaskStatus;
 use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
+use Tasker\Model\Task\Event\TaskDeleted;
 use Tasker\Model\User\Domain\UserId;
 
 /**
@@ -45,6 +46,9 @@ class OpenTaskReadModel extends AbstractReadModel
 				break;
 			case $event instanceof TaskCompleted:
 				$this->markTaskAsCompleted($event);
+				break;
+			case $event instanceof TaskDeleted:
+				$this->markTaskAsDeleted($event);
 				break;
 		}
 	}
@@ -130,6 +134,27 @@ class OpenTaskReadModel extends AbstractReadModel
 	 * @param TaskCompleted $event
 	 */
 	private function markTaskAsCompleted(TaskCompleted $event)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_OPEN_TASKS);
+
+		$taskId = $event->taskId();
+
+		$collection->updateOne(
+			[],
+			[
+				'$pull' => [
+					'days' => [
+						'task_id' => $taskId->toString()
+					]
+				]
+			]
+		);
+	}
+
+	/**
+	 * @param TaskDeleted $event
+	 */
+	private function markTaskAsDeleted(TaskDeleted $event)
 	{
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_OPEN_TASKS);
 

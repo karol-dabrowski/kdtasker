@@ -93,6 +93,7 @@ class TaskReadModel extends AbstractReadModel
 		$userId = $event->creatorId();
 		$taskId = $event->taskId();
 		$deadlineDate = $event->deadline()->dateToString();
+		$deadlineTime = $event->deadline()->timeToString();
 		$title = $event->title();
 
 		if($collection->countDocuments(['user_id' => $userId->toString()]) === 0) {
@@ -102,6 +103,7 @@ class TaskReadModel extends AbstractReadModel
 		$task = [
 			'task_id' => $taskId->toString(),
 			'deadline_date' => $deadlineDate,
+			'deadline_time' => $deadlineTime,
 			'title' => $title,
 			'status' => TaskStatus::OPEN
 		];

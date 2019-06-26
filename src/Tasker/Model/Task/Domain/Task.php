@@ -80,7 +80,7 @@ class Task extends AggregateRoot
 	public function delete(): void
 	{
 		if($this->status !== TaskStatus::OPEN) {
-			throw new \LogicException('task|cannot_be_completed');
+			throw new \LogicException('task|cannot_be_deleted');
 		}
 
 		$this->recordThat(TaskDeleted::create($this->taskId));

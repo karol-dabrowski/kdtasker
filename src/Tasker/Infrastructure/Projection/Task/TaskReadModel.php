@@ -113,8 +113,14 @@ class TaskReadModel extends AbstractReadModel
 				'user_id' => $userId->toString()
 			],
 			[
-				'$addToSet' => [
-					'days' => $task
+				'$push' => [
+					'days' => [
+						'$each' => [$task],
+						'$sort' => [
+							'deadline_date' => 1,
+							'deadline_time' => 1
+						]
+					]
 				]
 			]
 		);

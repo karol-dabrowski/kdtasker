@@ -11,5 +11,5 @@ final class TaskStatus
 {
 	public const OPEN = 1;
 	public const COMPLETED = 2;
-	public const REMOVED = 3;
+	public const DELETED = 3;
 }

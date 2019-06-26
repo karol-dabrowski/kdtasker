@@ -7,6 +7,7 @@ use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
 use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
+use Tasker\Model\Task\Event\TaskDeleted;
 use Tasker\Model\User\Domain\UserId;
 
 /**
@@ -76,6 +77,15 @@ class Task extends AggregateRoot
 		$this->recordThat(TaskCompleted::create($this->taskId));
 	}
 
+	public function delete(): void
+	{
+		if($this->status !== TaskStatus::OPEN) {
+			throw new \LogicException('task|cannot_be_completed');
+		}
+
+		$this->recordThat(TaskDeleted::create($this->taskId));
+	}
+
 	/**
 	 * @return TaskId
 	 */
@@ -137,6 +147,9 @@ class Task extends AggregateRoot
 			case TaskCompleted::class:
 				$this->whenTaskCompleted($event);
 				break;
+			case TaskDeleted::class:
+				$this->whenTaskDeleted($event);
+				break;
 		}
 	}
 
@@ -160,5 +173,13 @@ class Task extends AggregateRoot
 	protected function whenTaskCompleted(TaskCompleted $event): void
 	{
 		$this->status = TaskStatus::COMPLETED;
+	}
+
+	/**
+	 * @param TaskDeleted $event
+	 */
+	protected function whenTaskDeleted(TaskDeleted $event): void
+	{
+		$this->status = TaskStatus::DELETED;
 	}
 }

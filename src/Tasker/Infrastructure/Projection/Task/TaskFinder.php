@@ -74,7 +74,9 @@ class TaskFinder
 			]
 		];
 
-		$response = $collection->aggregate($aggregate, $this->getOptions())->toArray();
+		$tasks = $collection->aggregate($aggregate, $this->getOptions())->toArray();
+		$response = $this->sortTasks($tasks);
+
 		return $response;
 	}
 
@@ -89,5 +91,23 @@ class TaskFinder
 				'document' => 'array',
 			]
 		];
+	}
+
+	/**
+	 * @param array $tasks
+	 * @return array
+	 */
+	private function sortTasks(array $tasks): array
+	{
+		$tasksWithTime = [];
+
+		foreach ($tasks as $task) {
+			if(!is_null($task['deadline_time'])) {
+				array_push($tasksWithTime, $task);
+				array_pop($tasks);
+			}
+		}
+
+		return array_merge($tasksWithTime, $tasks);
 	}
 }

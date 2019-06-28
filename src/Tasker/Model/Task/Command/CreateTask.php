@@ -70,6 +70,8 @@ class CreateTask extends Command implements PayloadConstructable
 		Assertion::uuid($payload['task_id'], 'task_id|must_be_correct_uuid');
 		Assertion::keyExists($payload, 'title', 'title|is_required');
 		Assertion::string($payload['title'], 'title|must_be_a_string');
+		Assertion::minLength($payload['title'], 3, 'title|too_short');
+		Assertion::maxLength($payload['title'], 255, 'title|too_long');
 		Assertion::keyExists($payload, 'user_id', 'user_id|is_required');
 		Assertion::uuid($payload['user_id'], 'user_id|must_be_correct_uuid');
 		Assertion::keyExists($payload, 'deadline_date', 'deadline_date|is_required');

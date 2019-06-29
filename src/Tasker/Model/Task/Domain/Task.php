@@ -8,6 +8,7 @@ use Prooph\EventSourcing\AggregateRoot;
 use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
 use Tasker\Model\Task\Event\TaskDeleted;
+use Tasker\Model\Task\Event\TaskEdited;
 use Tasker\Model\User\Domain\UserId;
 
 /**
@@ -66,6 +67,19 @@ class Task extends AggregateRoot
 		$self->recordThat(TaskCreated::create($taskId, $title, $creatorId, $assigneeId, $deadline));
 
 		return $self;
+	}
+
+	/**
+	 * @param string $title
+	 * @param TaskDeadline $deadline
+	 */
+	public function edit(string $title, TaskDeadline $deadline): void
+	{
+		if($this->status !== TaskStatus::OPEN) {
+			throw new \LogicException('task|cannot_be_edited');
+		}
+
+		$this->recordThat(TaskEdited::create($this->taskId, $title, $deadline));
 	}
 
 	public function complete(): void
@@ -144,6 +158,9 @@ class Task extends AggregateRoot
 			case TaskCreated::class:
 				$this->whenTaskCreated($event);
 				break;
+			case TaskEdited::class:
+				$this->whenTaskEdited($event);
+				break;
 			case TaskCompleted::class:
 				$this->whenTaskCompleted($event);
 				break;
@@ -165,6 +182,16 @@ class Task extends AggregateRoot
 		$this->assigneeId = $event->assigneeId();
 		$this->deadline = $event->deadline();
 		$this->status = TaskStatus::OPEN;
+	}
+
+	/**
+	 * @param TaskEdited $event
+	 * @throws \Exception
+	 */
+	protected function whenTaskEdited(TaskEdited $event): void
+	{
+		$this->title = $event->title();
+		$this->deadline = $event->deadline();
 	}
 
 	/**

@@ -57,7 +57,7 @@ class TaskReadModel extends AbstractReadModel
 	{
 		$this->mongoConnection->createCollection(Table::READ_MONGO_TASKS);
 		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
-		$collection->createIndex(['task_id' => 1], ['unique' => true]);
+		$collection->createIndex(['user_id' => 1], ['unique' => true]);
 	}
 
 	/**

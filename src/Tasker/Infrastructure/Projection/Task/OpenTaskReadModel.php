@@ -12,6 +12,7 @@ use Tasker\Model\Task\Domain\TaskStatus;
 use Tasker\Model\Task\Event\TaskCompleted;
 use Tasker\Model\Task\Event\TaskCreated;
 use Tasker\Model\Task\Event\TaskDeleted;
+use Tasker\Model\Task\Event\TaskEdited;
 use Tasker\Model\User\Domain\UserId;
 
 /**
@@ -43,6 +44,9 @@ class OpenTaskReadModel extends AbstractReadModel
 		switch(true) {
 			case $event instanceof TaskCreated:
 				$this->insertTask($event);
+				break;
+			case $event instanceof TaskEdited:
+				$this->editTask($event);
 				break;
 			case $event instanceof TaskCompleted:
 				$this->markTaskAsCompleted($event);
@@ -131,6 +135,49 @@ class OpenTaskReadModel extends AbstractReadModel
 	}
 
 	/**
+	 * @param TaskEdited $event
+	 * @throws \Exception
+	 */
+	private function editTask(TaskEdited $event)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_OPEN_TASKS);
+
+		$taskId = $event->taskId();
+		$deadlineDate = $event->deadline()->dateToString();
+		$deadlineTime = $event->deadline()->timeToString();
+		$title = $event->title();
+
+		$userId = $collection->findOneAndUpdate(
+			[
+				'days' => [
+					'$elemMatch' => [
+						'task_id' => $taskId->toString()
+					]
+				]
+			],
+			[
+				'$set' => [
+					'days.$.deadline_date' => $deadlineDate,
+					'days.$.deadline_time' => $deadlineTime,
+					'days.$.title' => $title
+				]
+			],
+			[
+				'typeMap' => [
+					'root' => 'array',
+					'document' => 'array',
+				],
+				'projection' => [
+					'_id' => 0,
+					'user_id' => 1
+				]
+			]
+		)['user_id'];
+
+		$this->sortByDateAndTime($collection, $userId);
+	}
+
+	/**
 	 * @param TaskCompleted $event
 	 */
 	private function markTaskAsCompleted(TaskCompleted $event)
@@ -184,5 +231,29 @@ class OpenTaskReadModel extends AbstractReadModel
 		];
 
 		$collection->insertOne($user);
+	}
+
+	/**
+	 * @param Collection $collection
+	 * @param string $userId
+	 */
+	private function sortByDateAndTime(Collection $collection, string $userId): void
+	{
+		$collection->updateOne(
+			[
+				'user_id' => $userId
+			],
+			[
+				'$push' => [
+					'days' => [
+						'$each' => [],
+						'$sort' => [
+							'deadline_date' => 1,
+							'deadline_time' => 1
+						]
+					]
+				]
+			]
+		);
 	}
 }

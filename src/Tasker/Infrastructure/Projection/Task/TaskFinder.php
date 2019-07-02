@@ -29,11 +29,37 @@ class TaskFinder
 	}
 
 	/**
-	 * @param TaskId $id
+	 * @param UserId $userId
+	 * @param TaskId $taskId
+	 * @return array
 	 */
-	public function findById(TaskId $id)
+	public function find(UserId $userId, TaskId $taskId)
 	{
-		//@TODO Implement
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_TASKS);
+
+		$aggregate = [
+			[
+				'$match' => [
+					'user_id' => $userId->toString()
+				]
+			],
+			[
+				'$unwind' => '$days'
+			],
+			[
+				'$replaceRoot' => [
+					'newRoot' => '$days'
+				]
+			],
+			[
+				'$match' => [
+					'task_id' => $taskId->toString()
+				]
+			]
+		];
+
+		$task = $collection->aggregate($aggregate, $this->getOptions())->toArray();
+		return $task ? $task[0] : [];
 	}
 
 	/**

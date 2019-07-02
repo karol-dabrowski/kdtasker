@@ -34,7 +34,7 @@ class GetTaskByIdHandler
 	 */
 	public function __invoke(GetTaskById $query, Deferred $deferred = null)
 	{
-		$response = $this->taskFinder->findById($query->taskId());
+		$response = $this->taskFinder->find($query->userId(), $query->taskId());
 
 		if (null === $deferred) {
 			return $response;

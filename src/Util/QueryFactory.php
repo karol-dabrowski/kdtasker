@@ -22,7 +22,7 @@ class QueryFactory
 	{
 		switch (true) {
 			case GetTaskById::class === $queryName:
-				return new GetTaskById($attributes['task_id']);
+				return new GetTaskById($attributes['task_id'], $attributes['authenticated_user_id']);
 			case GetTasksByUserId::class === $queryName:
 				return new GetTasksByUserId($attributes['user_id']);
 			case GetUserTodaysTasks::class === $queryName:

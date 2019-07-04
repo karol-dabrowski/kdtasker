@@ -16,9 +16,10 @@ class QueryFactory
 	/**
 	 * @param string $queryName
 	 * @param array $attributes
+	 * @param array $parameters
 	 * @return GetTaskById|GetTasksByUserId|GetUserTodaysTasks|null
 	 */
-	public static function createQuery(string $queryName, array $attributes)
+	public static function createQuery(string $queryName, array $attributes, array $parameters)
 	{
 		switch (true) {
 			case GetTaskById::class === $queryName:

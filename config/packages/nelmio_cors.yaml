@@ -54,6 +54,12 @@ nelmio_cors:
             allow_methods: ['GET']
             allow_headers: ['*']
             max_age: 3600
+        '^/api/tasks/getOpenTasks$':
+            allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
+            origin_regex: true
+            allow_methods: ['GET']
+            allow_headers: ['*']
+            max_age: 3600
         '^/api/task/get/':
             allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
             origin_regex: true

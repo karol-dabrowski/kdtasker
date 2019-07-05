@@ -16,3 +16,4 @@ prooph_service_bus:
                     'Tasker\Model\Task\Query\GetTaskById': '@Tasker\Model\Task\QueryHandler\GetTaskByIdHandler'
                     'Tasker\Model\Task\Query\GetTasksByUserId': '@Tasker\Model\Task\QueryHandler\GetTasksByUserIdHandler'
                     'Tasker\Model\Task\Query\GetUserTodaysTasks': '@Tasker\Model\Task\QueryHandler\GetUserTodaysTasksHandler'
+                    'Tasker\Model\Task\Query\GetUserOpenTasksForNextDays': '@Tasker\Model\Task\QueryHandler\GetUserOpenTasksForNextDaysHandler'

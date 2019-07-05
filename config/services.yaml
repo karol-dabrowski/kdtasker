@@ -58,6 +58,9 @@ services:
     Tasker\Model\Task\QueryHandler\GetUserTodaysTasksHandler:
         arguments: ['@prooph_event_store.finder.task_finder']
 
+    Tasker\Model\Task\QueryHandler\GetUserOpenTasksForNextDaysHandler:
+        arguments: ['@prooph_event_store.finder.task_finder']
+
     # Command handlers - user context
 
     Tasker\Model\User\CommandHandler\RegisterUserHandler:

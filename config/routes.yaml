@@ -67,3 +67,9 @@ get_user_todays_tasks:
     controller: App\Controller\ApiController::getAction
     defaults: { query: 'Tasker\Model\Task\Query\GetUserTodaysTasks' }
     methods: GET
+
+get_user_open_tasks:
+    path: /api/tasks/getOpenTasks
+    controller: App\Controller\ApiController::getAction
+    defaults: { query: 'Tasker\Model\Task\Query\GetUserOpenTasksForNextDays' }
+    methods: GET

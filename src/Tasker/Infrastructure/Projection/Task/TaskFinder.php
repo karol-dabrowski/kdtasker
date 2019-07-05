@@ -72,6 +72,73 @@ class TaskFinder
 
 	/**
 	 * @param UserId $id
+	 * @param \DateTime $startDate
+	 * @param \DateTime $endDate
+	 * @return mixed
+	 */
+	public function findUserOpenTasksBetweenDates(UserId $id, \DateTime $startDate, \DateTime $endDate)
+	{
+		$collection = $this->mongoConnection->selectCollection(Table::READ_MONGO_OPEN_TASKS);
+
+		$aggregate = [
+			[
+				'$match' => [
+					'user_id' => $id->toString()
+				]
+			],
+			[
+				'$unwind' => '$days'
+			],
+			[
+				'$replaceRoot' => [
+					'newRoot' => '$days'
+				]
+			],
+			[
+				'$match' => [
+					'$expr' => [
+						'$and' => [
+							[
+								'$gte' => [
+									[
+										'$dateFromString' => [
+											'dateString' => '$deadline_date'
+										]
+									],
+									[
+										'$dateFromString' => [
+											'dateString' => $startDate->format('Y-m-d')
+										]
+									]
+								]
+							],
+							[
+								'$lte' => [
+									[
+										'$dateFromString' => [
+											'dateString' => '$deadline_date'
+										]
+									],
+									[
+										'$dateFromString' => [
+											'dateString' => $endDate->format('Y-m-d')
+										]
+									]
+								]
+							]
+						]
+					]
+				]
+
+			]
+		];
+
+		$tasks = $collection->aggregate($aggregate, $this->getOptions())->toArray();
+		return($tasks);
+	}
+
+	/**
+	 * @param UserId $id
 	 * @param string $day
 	 * @return array
 	 */

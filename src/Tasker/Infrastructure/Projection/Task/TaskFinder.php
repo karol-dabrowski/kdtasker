@@ -64,14 +64,6 @@ class TaskFinder
 
 	/**
 	 * @param UserId $id
-	 */
-	public function findUserTasks(UserId $id)
-	{
-		//@TODO Implement
-	}
-
-	/**
-	 * @param UserId $id
 	 * @param \DateTime $startDate
 	 * @param \DateTime $endDate
 	 * @return mixed

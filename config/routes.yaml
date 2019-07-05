@@ -54,14 +54,6 @@ get_task:
     defaults: { query: 'Tasker\Model\Task\Query\GetTaskById' }
     methods: GET
 
-get_tasks_by_user_id:
-    path: /api/tasks/getByUserId/{user_id}
-    requirements:
-        user_id: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
-    controller: App\Controller\ApiController::getAction
-    defaults: { query: 'Tasker\Model\Task\Query\GetTasksByUserId' }
-    methods: GET
-
 get_user_todays_tasks:
     path: /api/tasks/getTodaysTasks
     controller: App\Controller\ApiController::getAction

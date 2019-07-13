@@ -28,7 +28,12 @@ class ErrorResponseFactory
 				return new LogicErrorResponse($e->getPrevious()->getMessage());
 				break;
 			default:
-				return new JsonResponse(['error' => ['type' => 'unknown_error']], JsonResponse::HTTP_NOT_ACCEPTABLE);
+				return new JsonResponse([
+					'error' => [
+						'type' => 'unknown_error',
+						'message' => 'unknown_error'
+					]
+				], JsonResponse::HTTP_NOT_ACCEPTABLE);
 		}
 	}
 }

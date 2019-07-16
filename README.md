@@ -23,7 +23,7 @@ $ openssl genrsa -out config/jwt/private.pem -aes256 4096
 $ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 ```
 
-### Development environment setup
+## Development environment setup
 
 **Hint: Skip this step if you don't need to run your app in development mode**
 

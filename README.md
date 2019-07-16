@@ -62,3 +62,6 @@ php bin/console server:run
 
 Done! Application has been run in development mode.
 
+
+## License
+Released under the MIT license.

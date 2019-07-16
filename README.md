@@ -2,6 +2,12 @@
 
 API back-end of KD Tasker, todo application based on CQRS and event sourcing architecture.
 
+## Requirements
+
+* PHP 7.1.3 or greater
+* MySQL 5.7 (MariaDB 10.3) or greater
+* MongoDB 3.6 or greater
+
 ## Instructions
 
 Clone this repository and install all required dependencies.

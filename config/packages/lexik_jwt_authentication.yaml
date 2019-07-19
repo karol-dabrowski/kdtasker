@@ -5,4 +5,4 @@ lexik_jwt_authentication:
     token_ttl: '%env(resolve:JWT_TOKEN_TTL)%'
     token_extractors:
         authorization_header:
-            prefix: ""
+            prefix: "Bearer"

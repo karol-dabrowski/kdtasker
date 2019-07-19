@@ -1,4 +1,6 @@
 namespace: App\Tests
+params:
+    - .env.test.local
 paths:
     tests: tests
     output: tests/_output
@@ -8,7 +10,3 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-params:
-    - .env
-    - .env.test
-    - .env.test.local

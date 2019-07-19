@@ -38,17 +38,21 @@ services:
 
     prooph_event_store.projection.task_projection:
         class: Tasker\Infrastructure\Projection\Task\TaskProjection
+        public: true
 
     prooph_event_store.read_model.task_read_model:
         class: Tasker\Infrastructure\Projection\Task\TaskReadModel
         arguments: ['@mongo.connection.default']
+        public: true
 
     prooph_event_store.projection.open_task_projection:
         class: Tasker\Infrastructure\Projection\Task\OpenTaskProjection
+        public: true
 
     prooph_event_store.read_model.open_task_read_model:
         class: Tasker\Infrastructure\Projection\Task\OpenTaskReadModel
         arguments: ['@mongo.connection.default']
+        public: true
 
     prooph_event_store.finder.task_finder:
         class: Tasker\Infrastructure\Projection\Task\TaskFinder

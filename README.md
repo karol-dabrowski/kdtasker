@@ -113,5 +113,9 @@ $ php vendor/bin/codecept run api #Runs API tests
 $ php vendor/bin/codecept run #Runs all tests
 ```
 
+## Production environment setup
+
+**This is alpha version of application. Running in production mode is not recommended. This part of README will be completed in beta release.**
+
 ## License
 Released under the MIT license.

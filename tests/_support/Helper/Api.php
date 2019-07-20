@@ -59,4 +59,37 @@ class Api extends \Codeception\Module
 		$response = json_decode($I->grabResponse(), true);
 		return $response['token'];
 	}
+
+	/**
+	 * @param ApiTester $I
+	 * @return string
+	 */
+	public function getEventStreamName(ApiTester $I): string
+	{
+		$eventStreamName = $I->grabFromDatabase(
+			'event_streams',
+			'stream_name',
+			[
+				'real_stream_name' => 'event_stream'
+			]
+		);
+
+		return $eventStreamName;
+	}
+
+	/**
+	 * @param ApiTester $I
+	 * @param string $name
+	 */
+	public function runProjection(ApiTester $I, string $name): void
+	{
+		$projectionName = $name . '_projection';
+		$readModelName = $name . '_read_model';
+
+		$projectionManager = $I->grabService('prooph_event_store.projection_manager.task_projection_manager');
+		$projection = $I->grabService('prooph_event_store.projection.' . $projectionName);
+		$readModel = $I->grabService('prooph_event_store.read_model.' . $readModelName);
+		$readModelProjection = $projectionManager->createReadModelProjection($projectionName, $readModel);
+		$projection->project($readModelProjection)->run(false);
+	}
 }

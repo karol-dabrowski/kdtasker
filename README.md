@@ -1,6 +1,6 @@
 # KD Tasker
 
-API back-end of KD Tasker, todo application based on CQRS and event sourcing architecture.
+API back-end of KD Tasker, application based on CQRS and event sourcing architecture.
 
 ## Requirements
 

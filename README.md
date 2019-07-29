@@ -17,7 +17,7 @@ $ cd ./kdtasker
 $ composer install
 ```
 
-Generate private and public keys (OpenSSL library required) and enter your private passphrase when you are asked about it
+Generate private and public keys (OpenSSL library required) and enter your private passphrase when you are asked for it
 ```bash
 $ openssl genrsa -out config/jwt/private.pem -aes256 4096
 $ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem

@@ -66,7 +66,7 @@ Run development server
 php bin/console server:run
 ```
 
-**Done! Application has been run in development mode.**
+**Done! Application has been running in development mode.**
 
 ## Test environment setup
 

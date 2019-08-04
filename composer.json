@@ -82,7 +82,7 @@
         }
     },
     "require-dev": {
-        "codeception/codeception": "^2.5",
+        "codeception/codeception": "^3.0",
         "fzaninotto/faker": "^1.8",
         "symfony/maker-bundle": "^1.11",
         "symfony/var-dumper": "4.2.*",
